@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Restroom Place</title>
+  <style media="screen">
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>TopMonks</h1>
+    <p>Pánský záchod na proti fotbálku</p>
+    <!-- profile picture -->
+    <img src="../profile.jpg" alt="Profile picture" height="100">
+  </header>
+  <main>
+    <article>
+      <p><strong>Kamiléé</strong>, dej mi tvůj GitHub nick..</p>
+      <button>Líbí</button>
+    </article>
+    <article>
+      <p>Tady jsem se moc dobře vysral.</p>
+      <button>Líbí</button>
+    </article>
+    <article>
+      <p>Hledám pomoc se stěhodváním, odměna jistá!</p>
+      <button>Líbí</button>
+    </article>
+  </main>
+  <aside>
+    <form method="POST">
+      <label>
+        <span>Komentář:</span>
+        <textarea>Já si nic nemyslim!</textarea>
+      </label>
+      <button type="submit">Odeslat</button>
+    </form>
+  </aside>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "/__/firebase/9.4.0/firebase-app.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBeH_RDEDJj_63xSc3LGrCvgMiCV3dT-Tg",
+      authDomain: "restroom-place.firebaseapp.com",
+      projectId: "restroom-place",
+      storageBucket: "restroom-place.appspot.com",
+      messagingSenderId: "746979184762",
+      appId: "1:746979184762:web:f9f3767b16f9dedf0febc3"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    console.log({ app })
+  </script>
+</body>
+
+</html>
