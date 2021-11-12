@@ -8,3 +8,11 @@ Místo, kde anonymně zanecháte vzkat pro ostatni spolusráče
 
 
 Stačí commitovat...
+
+## Logs
+
+Firebase inicializovaná. 
+
+Hosting inicializovaný.
+
+Firebase na klientu inicializovaný.
