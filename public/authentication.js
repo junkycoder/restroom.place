@@ -10,10 +10,13 @@ import {
 
 export const auth = getAuth(app);
 
-export let currentUser = window.currentUser = auth.currentUser;
+export let currentUser = (window.currentUser = auth.currentUser);
 
+console.time("User load");
 onAuthStateChanged(auth, (user) => {
-  window.currentUser =currentUser = user;
+  console.log("Auth changed", user);
+  window.currentUser = currentUser = user;
+  console.timeEnd("User load");
 });
 
 /**

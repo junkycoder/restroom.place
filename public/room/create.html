@@ -40,6 +40,7 @@
         }
       } catch (error) {
         console.error(error);
+
         if (error.code === 'auth/invalid-action-code') {
           alert("Neplatný odkaz, zkuste to znovu.");
           window.location.href = `/verify-self?destination=${encodeURIComponent('/room/create')}`;
@@ -73,16 +74,49 @@
   </main>
   <script type="module">
     import { isCurrentUserVerified } from "/authentication.js";
+    import { generateRoom } from "/functions.js";
+
+    const button = document.querySelector('#create button[type="submit"]');
 
     document.querySelector('form#create').addEventListener('submit', async (event) => {
       event.preventDefault();
+      button.setAttribute("disabled", true);
+
       if (await isCurrentUserVerified() === false) {
         alert("Nemáte ověřený účet, zkontrolujte svůj email.");
         window.location.href = `/verify-self?destination=${encodeURIComponent('/room/create')}`;
         return;
       }
+
       const roomId = event.target.identificator.value || Date.now();
-      window.location.href = `/room/${roomId}/init`;
+
+      try {
+        const qrCodeBase64ImageSource = await generateRoom({ roomId });
+        document.querySelector('main').innerHTML = `
+          <div class="room-sticker">
+            <span>Napiš něco na zěď<span>
+            <img src=${qrCodeBase64ImageSource} title="QR kód" />
+            <span>${roomId}<span>
+          </div>
+          <button id="share">Sdílet (vytisknout)</button>
+        `;
+        document.querySelector('#share').addEventListener('click', async (event) => {
+          event.preventDefault();
+          window.navigator.share({
+            files: [{
+              type: 'image/png',
+              file: qrCodeBase64ImageSource
+            }]
+          })
+        })
+      } catch (error) {
+        console.error(error);
+        alert("Nastala chyba.");
+      } finally {
+        button.removeAttribute("disabled");
+      }
+
+
     });
   </script>
 </body>

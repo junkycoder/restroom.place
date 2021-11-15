@@ -41,13 +41,17 @@
     </form>
   </main>
   <script type="module">
-    import { sendMagicLink, } from '/authentication.js';
+    import { sendMagicLink } from '/authentication.js';
+
+    const button = document.querySelector('#verify button[type="submit"]');
 
     try {
       const form = document.getElementById('verify');
       form.querySelector('input[type="email"]').value = localStorage.getItem('emailForSignIn');
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
+        button.setAttribute("disabled", true);
+
         const email = form.elements.email.value;
         const terms = form.elements.terms.checked;
         if (!terms) {
@@ -56,12 +60,16 @@
         }
         const destination = new URL(window.location.href).searchParams.get('destination');
         await sendMagicLink({ email, destination });
-        alert('Na váš e-mail byl odeslán přihlašovací odkaz. Zkontrolujte i Spam složku..');
+        document.querySelector('main').innerHTML = '<p>Na váš e-mail byl odeslán přihlašovací odkaz.</p>';
+
       });
     } catch (O_e) {
       console.error(O_e);
       alert('Odeslání přihlašovacího odkazu se nezdařilo.');
+    } finally {
+      button.removeAttribute("disabled");
     }
+
   </script>
 </body>
 

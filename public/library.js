@@ -6,6 +6,11 @@ export function hasTouchScreen() {
   return "ontouchstart" in window || navigator.maxTouchPoints;
 }
 
+/**
+ * URL's pathname has to start with "/room"
+ * @param {String} strUrl
+ * @returns
+ */
 export function parseRoomIdFromUrl(strUrl) {
   if (!strUrl) strUrl = window.location.href;
   try {
