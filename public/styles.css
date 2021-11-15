@@ -20,7 +20,7 @@ header p {
   text-align: center;
 }
 
-h1 {
+header h1, main > h2 {
   text-align: center;
 }
 

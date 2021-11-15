@@ -13,6 +13,10 @@
       display: block;
       margin-bottom: 8px;
     }
+    .done-message {
+      text-align: center;
+      margin: 16px;
+    }
   </style>
 </head>
 
@@ -60,7 +64,7 @@
         }
         const destination = new URL(window.location.href).searchParams.get('destination');
         await sendMagicLink({ email, destination });
-        document.querySelector('main').innerHTML = '<p>Na váš e-mail byl odeslán přihlašovací odkaz.</p>';
+        document.querySelector('main').innerHTML = '<p class="done-message"><strong>Na váš e-mail byl odeslán přihlašovací odkaz.</strong></p>';
 
       });
     } catch (O_e) {
