@@ -5,6 +5,25 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "trailingSlash": false,
+    "rewrites": [
+      {
+        "source": "/room/create",
+        "destination": "/room/create.html"
+      },
+      {
+        "source": "/room/**/init",
+        "destination": "/room/init.html"
+      },
+      {
+        "source": "/room/**/edit",
+        "destination": "/room/edit.html"
+      },
+      {
+        "source": "/room/**",
+        "destination": "/room/index.html"
+      }
     ]
   }
 }

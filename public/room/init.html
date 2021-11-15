@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <link media="screen" rel="stylesheet" href="/styles.css">
+  <script type="module" src="/runtime.js"></script>
+  <title>Inicializace - Restroom Place</title>
+  <style media="screen">
+    main h2 {
+      font-size: 24px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Inicializace místnosti</h1>
+  </header>
+  <main>
+    <h2>1.<br>Někde na místě nalepte QR kód</h2>
+    <h2>2.<br>Nastavte profilovou fotku místa</h2>
+    <h2>3.<br>Vyplňte místní základní informace</h2>
+    <form method="POST" id="publish">
+      <p class="disclaimer mt32">There is no guarantee your room will persist</p>
+      <button type="submit">Publikovat</button>
+    </form>
+  </main>
+  <script type="module">
+    import { parseRoomIdFromUrl } from "/library.js";
+    const roomId = parseRoomIdFromUrl();
+    document.querySelector('form#publish').addEventListener('submit', (event) => {
+      event.preventDefault();
+      window.location.href = `/room/${roomId}`;
+    });
+  </script>
+</body>
+
+</html>

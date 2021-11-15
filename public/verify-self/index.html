@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Ověření uživatele - Restroom Place</title>
+  <link media="screen" rel="stylesheet" href="/styles.css">
+  <script type="module" src="/runtime.js"></script>
+  <style media="screen">
+    main form label {
+      display: block;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Ověření uživatele</h1>
+    <p>Staňte se ověřeným uživatelem a získáte funkce navíc.</p>
+    <ul>
+      <li>Zpětný přístup do všech navštívených místností</li>
+      <li>Vytvoření vlastních místností</li>
+    </ul>
+    </p>
+  </header>
+  <main>
+    <form method="POST" id="verify">
+      <label>
+        <span>e-mail</span>
+        <input type="email" name="email" placeholder="e-mail" required>
+      </label>
+      <label>
+        <input type="checkbox" name="terms" required />
+        <span>Chápu <a href="/conditions.html">podmínky</a> a souhlasím s nimi</span>
+      </label>
+      <p class="disclaimer">Po odeslání vám na e-mail dorazí přihlašovací odkaz.</p>
+      <button type="submit">Odeslat</button>
+    </form>
+  </main>
+  <script type="module">
+    document.querySelector('form#verify').addEventListener('submit', (event) => {
+      event.preventDefault();
+      window.location.href = '/room/create';
+    });
+  </script>
+</body>
+
+</html>

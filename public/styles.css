@@ -1,0 +1,57 @@
+
+:root {
+  --primary-color: #000;
+}
+
+
+body {
+  font-size: 16px;
+}
+
+body.no-touch {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+header p {
+  font-size: 16px;
+  text-align: center;
+}
+
+h1 {
+  text-align: center;
+}
+
+.disclaimer {
+  text-align: center;
+  font-size: 12px;
+  margin: 0px;
+}
+
+input[type="text"], textarea {
+  font-size: 16px;
+}
+
+main button {
+  font-size: 1.5em;
+  margin: 8px auto;
+  display: block;
+  text-align: center;
+}
+
+main button ~ p {
+  text-align: center;
+}
+
+
+
+
+.mt16 {
+  margin-top: 16px !important;
+}
+
+.mt32 {
+  margin-top: 32px !important;
+}

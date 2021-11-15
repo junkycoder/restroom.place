@@ -3,58 +3,52 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Restroom Place</title>
+  <link media="screen" rel="stylesheet" href="/styles.css">
+  <script type="module" src="/runtime.js"></script>
   <style media="screen">
+
   </style>
 </head>
 
 <body>
   <header>
+    <p>
+      Mám takovej nápad.<br /><br />
+      Co kdyby na záchodech,<br />
+      tak jako kdysi,<br />
+      bylo zase co číst,<br />
+      čím i kam psát<br />
+      a vůbec ...
+    </p>
     <h1>Restroom Place</h1>
-    <p>Verify you are not a robot and generate room wildcard QR sticker</p>
   </header>
   <main>
-    <form id="generate-room" method="POST">
-      <label>
-        <span>Note:</span>
-        <input type="text" name="note" placeholder="Note" />
-      </label>
-      <button type="submit">Generate</button>
-    </form>
+    <h2>Vznik místa</h2>
+    <ol>
+      <li>vytvořte QR kód</li>
+      <li>nalepte v místnosti</li>
+      <li>vyplntě profil místa</li>
+    </ol>
+    <h2>Návštěvníci</h2>
+    <ul>
+      <li>jsou na místě</li>
+      <li>jsou anonymní</li>
+      <li>mohou číst a reagovat</li>
+    </ul>
+    <button id="create-room">Vytvořit místnost¹</button>
+    <p>¹Člověk musí bejt přihlášenej,<br />
+      aby mohl zakládat místnosti.</p>
   </main>
+  <script type="module" src="/runtime.js"></script>
   <script type="module">
-    // Note: Imports has to be from https://www.gstatic.com/, otherwise COmponents like auth and firestore wont work together
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.4.1/firebase-app.js";
-    import { initializeAuth, onAuthStateChanged, signInAnonymously } from 'https://www.gstatic.com/firebasejs/9.4.1/firebase-auth.js';
-    import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.4.1/firebase-firestore.js';
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBeH_RDEDJj_63xSc3LGrCvgMiCV3dT-Tg",
-      authDomain: "restroom-place.firebaseapp.com",
-      projectId: "restroom-place",
-      storageBucket: "restroom-place.appspot.com",
-      messagingSenderId: "746979184762",
-      appId: "1:746979184762:web:f9f3767b16f9dedf0febc3"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const auth = initializeAuth(app);
-
-    onAuthStateChanged(auth, user => {
-      console.log({user});
-     });
-
-
-    document.querySelector("#generate-room").addEventListener("submit", async event => {
+    document.querySelector('button#create-room').addEventListener('click', (event) => {
       event.preventDefault();
-      const note = event.target.note.value;
-      await signInAnonymously(auth).catch(console.error);
-      const user = auth.currentUser;
-      console.log({user});
+      // TODO check user and redirect to verify-self screen of not logged in
+      window.location.href = '/verify-self';
     });
   </script>
 </body>

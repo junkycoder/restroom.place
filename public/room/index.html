@@ -3,33 +3,40 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <link media="screen" rel="stylesheet" href="/styles.css">
+  <script type="module" src="/runtime.js"></script>
   <title>Restroom Place</title>
   <style media="screen">
+    aside button {
+      font-size: 16px;
+    }
   </style>
 </head>
 
 <body>
   <header>
-    <h1>TopMonks</h1>
-    <p>Pánský záchod na proti fotbálku</p>
-    <!-- profile picture -->
-    <img src="../profile.jpg" alt="Profile picture" height="100">
+    <h1>TopMonks pánský u fotbálku</h1>
+    <img src="/profile.jpg" alt="Profile picture" height="100">
+    <p>Místo kde se dobře kadí.</p>
   </header>
+  <hr>
   <main>
     <article>
-      <p><strong>Kamiléé</strong>, dej mi tvůj GitHub nick..</p>
-      <button>Líbí</button>
+      <p>Jo, dobře se tu kadí, ale občas to tu pěkně smrdí!</p>
     </article>
     <article>
-      <p>Tady jsem se moc dobře vysral.</p>
-      <button>Líbí</button>
+      <p>Nevíte co bude dnes k obědu?</p>
     </article>
     <article>
-      <p>Hledám pomoc se stěhodváním, odměna jistá!</p>
-      <button>Líbí</button>
+      <p>Nice, mají tu i osvěžovač.</p>
+    </article>
+    <article>
+      <p>Kdo zase nepoyžil štětku?! --václav</p>
     </article>
   </main>
+  <hr>
   <aside>
     <form method="POST">
       <label>
@@ -40,24 +47,12 @@
     </form>
   </aside>
   <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "/__/firebase/9.4.0/firebase-app.js";
-    // TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
+    import { parseRoomIdFromUrl } from "../library.js";
+    const roomId = parseRoomIdFromUrl();
 
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyBeH_RDEDJj_63xSc3LGrCvgMiCV3dT-Tg",
-      authDomain: "restroom-place.firebaseapp.com",
-      projectId: "restroom-place",
-      storageBucket: "restroom-place.appspot.com",
-      messagingSenderId: "746979184762",
-      appId: "1:746979184762:web:f9f3767b16f9dedf0febc3"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    console.log({ app })
+    document.querySelector('body header').addEventListener("click", () => {
+      window.location.href = `/room/${roomId}/edit`;
+    })
   </script>
 </body>
 
