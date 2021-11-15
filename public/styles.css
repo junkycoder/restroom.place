@@ -30,8 +30,10 @@ h1 {
   margin: 0px;
 }
 
-input[type="text"], textarea {
+input[type="text"], input[type="email"], textarea {
   font-size: 16px;
+  width: 100%;
+  padding: 6px 4px;
 }
 
 main button {

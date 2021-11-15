@@ -27,8 +27,8 @@
   </header>
   <main>
     <h2>Rooms (1)</h2>
-    <div style="border: 1px solid black; padding: 0 8px;">
-      <article>
+    <div id="rooms" style="border: 1px solid black; padding: 0 8px;">
+      <article data-id="topmonks-fotbalek-1">
         <h3>TopMonks pánksý u fotbálku</h3>
         <div>
           <span>8 / 3</span>
@@ -38,12 +38,16 @@
       </article>
     </div>
     <p>
-      <a href="/create-room">Nová místnost</a>
+      <a href="/room/create">Nová místnost</a>
     </p>
-    <a href="/">logout</a>
   </main>
   <script type="module">
-
+    const handleRoomClick = roomId => (event) => {
+      window.location.href = `/room/${roomId}`;
+    }
+    for (let article of document.querySelectorAll('#rooms article')) {
+      article.addEventListener('click', handleRoomClick(article.dataset.id));
+    }
   </script>
 </body>
 

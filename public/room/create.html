@@ -9,11 +9,52 @@
   <link media="screen" rel="stylesheet" href="/styles.css">
   <script type="module" src="/runtime.js"></script>
   <style media="screen">
+    main form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    main form label {
+      width: 100%;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+    main form label span {
+      display: block;
+      margin-bottom: 4px;
+      width: 100%;
+    }
   </style>
+  <script type="module">
+    import { isMagicLink, confirmMagicLink, isCurrentUserVerified } from "/authentication.js";
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      console.time('User verification')
+      try {
+        if (isMagicLink()) {
+          await confirmMagicLink();
+          window.location.search = '';
+        }
+      } catch (error) {
+        console.error(error);
+        if (error.code === 'auth/invalid-action-code') {
+          alert("Neplatný odkaz, zkuste to znovu.");
+          window.location.href = `/verify-self?destination=${encodeURIComponent('/room/create')}`;
+        } else {
+          alert("Nastala chyba.");
+        }
+
+      } finally {
+        console.timeEnd('User verification')
+      }
+    });
+  </script>
 </head>
 
 <body>
   <header>
+    <a href="/profile">Profil</a>
     <h1>Restroom Place</h1>
     <p>Zde můžete vytvořit QR kód k vytištění.</p>
   </header>
@@ -21,7 +62,7 @@
     <form id="create" method="POST">
       <label>
         <span>Identifikátor místnosti:</span>
-        <input type="text" name="identificator" />
+        <input type="text" name="identificator" placeholder="aktuální čas v milisekundách" />
       </label>
       <button type="submit" class="mt32">Vygenerovat</button>
       <p class="disclaimer">no guarantee your room will surrender<br />
@@ -29,8 +70,13 @@
     </form>
   </main>
   <script type="module">
-    document.querySelector('form#create').addEventListener('submit', (event) => {
+    document.querySelector('form#create').addEventListener('submit', async (event) => {
       event.preventDefault();
+      if (await isCurrentUserVerified() === false) {
+        alert("Nemáte ověřený účet, zkontrolujte svůj email.");
+        window.location.href = `/verify-self?destination=${encodeURIComponent('/room/create')}`;
+        return;
+      }
       const roomId = event.target.identificator.value || Date.now();
       window.location.href = `/room/${roomId}/init`;
     });
