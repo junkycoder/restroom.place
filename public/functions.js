@@ -1,8 +1,8 @@
 import { app } from "/application.js";
-import { getFunctions } from "https://www.gstatic.com/firebasejs/9.4.1/firebase-functions.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/9.4.1/firebase-functions.js";
 
 export const functions = getFunctions(app);
 
 export async function generateRoom({ roomId }) {
-  return functions.httpsCallable("generateRoom")({ roomId });
+  return httpsCallable(functions, "generateRoom")({ roomId });
 }
