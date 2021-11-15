@@ -9,7 +9,6 @@
   <link media="screen" rel="stylesheet" href="/styles.css">
   <script type="module" src="/runtime.js"></script>
   <style media="screen">
-
   </style>
 </head>
 
@@ -44,9 +43,15 @@
   </main>
   <script type="module" src="/runtime.js"></script>
   <script type="module">
+    import { isCurrentUserVerified } from "/authentication.js";
 
-    document.querySelector('button#create-room').addEventListener('click', (event) => {
+    document.querySelector('button#create-room').addEventListener('click', async (event) => {
       event.preventDefault();
+      if (isCurrentUserVerified()) {
+        window.location.href = '/room/create';
+      } else {
+        window.location.href = `/verify-self?destination=${encodeURIComponent('/room/create')}`;
+      }
       // TODO check user and redirect to verify-self screen of not logged in
       window.location.href = '/verify-self';
     });

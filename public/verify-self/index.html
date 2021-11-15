@@ -41,10 +41,24 @@
     </form>
   </main>
   <script type="module">
-    document.querySelector('form#verify').addEventListener('submit', (event) => {
-      event.preventDefault();
-      window.location.href = '/room/create';
-    });
+    import { sendMagicLink } from '/authentication.js';
+    try {
+      const form = document.getElementById('verify');
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const email = form.elements.email.value;
+        const terms = form.elements.terms.checked;
+        if (!terms) {
+          alert('Musíte souhlasit s podmínkami.');
+          return;
+        }
+        await sendMagicLink({ email, destination: '/room/create' });
+        alert('Na váš e-mail byl odeslán přihlašovací odkaz. Zkontrolujte i Spam složku..');
+      });
+    } catch (O_e) {
+      console.error(O_e);
+      alert('Odeslání přihlašovacího odkazu se nezdařilo.');
+    }
   </script>
 </body>
 
