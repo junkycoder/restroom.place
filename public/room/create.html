@@ -15,11 +15,13 @@
       justify-content: center;
       align-items: center;
     }
+
     main form label {
       width: 100%;
       padding: 16px;
       box-sizing: border-box;
     }
+
     main form label span {
       display: block;
       margin-bottom: 4px;
@@ -70,6 +72,8 @@
     </form>
   </main>
   <script type="module">
+    import { isCurrentUserVerified } from "/authentication.js";
+
     document.querySelector('form#create').addEventListener('submit', async (event) => {
       event.preventDefault();
       if (await isCurrentUserVerified() === false) {
