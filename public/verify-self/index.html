@@ -48,9 +48,9 @@
     import { sendMagicLink } from '/authentication.js';
 
     const button = document.querySelector('#verify button[type="submit"]');
+    const form = document.getElementById('verify');
 
     try {
-      const form = document.getElementById('verify');
       form.querySelector('input[type="email"]').value = localStorage.getItem('emailForSignIn');
       form.addEventListener('submit', async (event) => {
         event.preventDefault();

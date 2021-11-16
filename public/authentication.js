@@ -7,6 +7,7 @@ import {
   isSignInWithEmailLink,
   signInWithEmailLink,
 } from "https://www.gstatic.com/firebasejs/9.4.1/firebase-auth.js";
+import { isLocalhost } from "/library.js";
 
 export const auth = getAuth(app);
 
@@ -14,7 +15,7 @@ export let currentUser = (window.currentUser = auth.currentUser);
 
 console.time("User load");
 onAuthStateChanged(auth, (user) => {
-  console.log("Auth changed", user);
+  console.info("Auth changed", user);
   window.currentUser = currentUser = user;
   console.timeEnd("User load");
 });
@@ -29,10 +30,11 @@ export async function isCurrentUserVerified() {
 
 export async function sendMagicLink({
   email,
-  domain = "restroom.place",
+  domain = isLocalhost() ? "localhost:5000" : "restroom.place",
+  protocol = isLocalhost() ? "http" : "https",
   destination = "/",
 } = {}) {
-  const url = `https://${domain}${destination || ""}`;
+  const url = `${protocol}://${domain}${destination || ""}`;
   console.info(`Sending magic link to ${email}`, url);
 
   if (!email) throw new Error("Email is required");

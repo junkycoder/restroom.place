@@ -16,10 +16,15 @@ export function parseRoomIdFromUrl(strUrl) {
   try {
     const url = new URL(strUrl);
     const [prefix, id] = url.pathname.split("/").filter(Boolean);
-    if(prefix !== 'room') new Error("Not a room URL");
+    if (prefix !== "room") new Error("Not a room URL");
     return id;
   } catch (e) {
     debugger;
     return null;
   }
+}
+
+export function isLocalhost() {
+  const url = new URL(import.meta.url);
+  return url.hostname === "localhost";
 }
