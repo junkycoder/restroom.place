@@ -57,7 +57,6 @@
 
 <body>
   <header>
-    <a href="/profile">Profil</a>
     <h1>Restroom Place</h1>
     <p>Zde můžete vytvořit QR kód k vytištění.</p>
   </header>
@@ -68,7 +67,7 @@
         <input type="text" name="identificator" placeholder="aktuální čas v milisekundách" autocapitalize="false" />
       </label>
       <button type="submit" class="mt32">Vygenerovat</button>
-      <p class="disclaimer">no guarantee your room will surrender<br />
+      <p class="disclaimer">No guarantee your room will surrender<br />
         upcoming blackouts.</p>
     </form>
   </main>
@@ -91,14 +90,23 @@
       const roomId = event.target.identificator.value || Date.now();
 
       try {
-        const qrCodeBase64ImageSource = await generateRoom({ roomId });
+        const { data: qrCodeBase64ImageSource } = await generateRoom({ roomId });
         document.querySelector('main').innerHTML = `
           <div class="room-sticker">
-            <span>Napiš něco na zěď<span>
+            <div>
+              <span>Napiš něco na zěď</span>
+            </div>
             <img src=${qrCodeBase64ImageSource} title="QR kód" />
-            <span>${roomId}<span>
+            <div>
+              <span>${roomId}</span>
+            </div>
           </div>
           <button id="share">Sdílet (vytisknout)</button>
+          <p class="disclaimer">
+          Poté můžete okno zavřít<br>
+          a pokračovat načtením nalepeného QR kódu.<br>
+          (stačí k tomu fotoaparát v telefonu)
+          </p>
         `;
         document.querySelector('#share').addEventListener('click', async (event) => {
           event.preventDefault();

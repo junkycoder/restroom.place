@@ -1,3 +1,4 @@
 .vercel
 tmp/
 *.tmp.*
+firebase-adminsdk.json
