@@ -22,4 +22,6 @@ Místo, kde anonymně zanecháte vzkat pro ostatni spolusráče.
 
 - [x] Struktura obrazovek podle [wireframes](https://app.excalidraw.com/l/3morKKwsyGZ/9wcWz7uzmqn) nahozena.
 
-- [ ] Firebase signInWithEmailLink
+- [x] Firebase signInWithEmailLink
+
+- [x] Emulatory vseho nahozeny
