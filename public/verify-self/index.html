@@ -65,12 +65,12 @@
           return;
         }
         const destination = new URL(window.location.href).searchParams.get('destination');
-        // await sendMagicLink({ email, destination });
+        await sendMagicLink({ email, destination });
         document.querySelector('header').innerHTML = `
           <h1>Otevřete si e-mail</h1>
           <p>Na váš e-mail byl odeslán přihlašovací odkaz.</p>
         `;
-        document.querySelector('main').innerHTML = '';
+        document.querySelector('main').innerHTML = '<p class="disclaimer">Toto okno můžete vklidu zavřít.</p>';
 
       });
     } catch (O_e) {

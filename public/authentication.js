@@ -71,7 +71,7 @@ export async function confirmMagicLink(link) {
     // User opened the link on a different device. To prevent session fixation
     // attacks, ask the user to provide the associated email again. For example:
     email = window.prompt("Prosím doplňte e-mail pro potvrzení.");
-    window.localStorage.setItem("emailForSignIn", email);
+    if (email) window.localStorage.setItem("emailForSignIn", email);
   }
   // The client SDK will parse the code from the link for you.
   const result = await signInWithEmailLink(auth, email, link);
