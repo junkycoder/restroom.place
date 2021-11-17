@@ -74,6 +74,7 @@
   <script type="module">
     import { isCurrentUserVerified } from "/authentication.js";
     import { generateRoom } from "/functions.js";
+    import { toPng } from "https://unpkg.com/html-to-image@1.9.0?module";
 
     const button = document.querySelector('#create button[type="submit"]');
 
@@ -91,10 +92,11 @@
 
       try {
         const { data: qrCodeBase64ImageSource } = await generateRoom({ roomId });
-        document.querySelector('main').innerHTML = `
+        const contentElement = document.querySelector('main');
+        contentElement.innerHTML = `
           <div class="room-sticker">
             <div>
-              <span>Napiš něco na zěď</span>
+              <span>Napiš něco na zeď</span>
             </div>
             <img src=${qrCodeBase64ImageSource} title="QR kód" />
             <div>
@@ -103,18 +105,17 @@
           </div>
           <button id="share">Sdílet (vytisknout)</button>
           <p class="disclaimer">
-          Poté můžete okno zavřít<br>
-          a pokračovat načtením nalepeného QR kódu.<br>
-          (stačí k tomu fotoaparát v telefonu)
+            Poté můžete okno zavřít<br>
+            a pokračovat načtením nalepeného QR kódu.<br>
+            (stačí k tomu fotoaparát v telefonu)
           </p>
         `;
         document.querySelector('#share').addEventListener('click', async (event) => {
           event.preventDefault();
+          const sticker = await toPng(contentElement);
+          console.log(sticker);
           window.navigator.share({
-            files: [{
-              type: 'image/png',
-              file: qrCodeBase64ImageSource
-            }]
+            url: sticker
           })
         })
       } catch (error) {
