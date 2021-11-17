@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <link media="all" rel="stylesheet" href="/styles.css">
+  <script type="module" src="/runtime.js"></script>
+  <title>Vytisknout nálepku - Restroom Place</title>
+  <style media="all">
+    body {
+      margin: 0;
+    }
+
+    .center-flex {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .center-text {
+      text-align: center;
+    }
+
+    .room-sticker {
+      width: 120pt;
+      height: 150pt;
+      border: 1pt solid var(--color-primary);
+      box-sizing: border-box;
+    }
+
+    .room-sticker img {
+      width: auto;
+      height: auto;
+      z-index: 1;
+    }
+
+    .room-sticker h2 {
+      font-size: 11pt;
+      margin: 0;
+      padding: 0;
+    }
+
+    .room-sticker span {
+      font-size: 8pt;
+    }
+  </style>
+  <style media="screen">
+    body {
+      min-height: 99.9vh;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    footer {
+      font-size: small;
+      flex: 1;
+    }
+  </style>
+  <style media="print">
+    header,
+    footer {
+      display: none !important;
+    }
+
+    body,
+    main {
+      align-items: flex-start !important;
+    }
+  </style>
+</head>
+
+<body class="center-flex">
+  <header>
+    <h1>Vytiskněte tuto stránku</h1>
+    <p>Poté nálepku umístěte na místo.</p>
+  </header>
+  <main class="center-flex">
+    <div class="room-sticker center-flex">
+      <h2>Napsat něco na zeď</h2>
+      <img src="" alt="QR" id="qr">
+      <span id="room-id"></span>
+      <script type="module">
+        import { getUrlParam, parseRoomIdFromUrl } from "/library.js";
+        const roomId = parseRoomIdFromUrl();
+        document.querySelector('img#qr').src = getUrlParam('qr');
+        document.querySelector('#room-id').innerText = roomId;
+      </script>
+    </div>
+  </main>
+  <footer class="center-flex center-text">
+    <p>Pomocí funkce sdílet nálepku snadno <br>(vytisknete nebo nasílíte někomu s tiskárnou)</p>
+  </footer>
+</body>
+
+</html>

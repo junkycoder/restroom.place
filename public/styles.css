@@ -52,14 +52,6 @@ main button ~ p {
   text-align: center;
 }
 
-.room-sticker {
-  display: block;
-  margin: 0 auto;
-  width: 180px;
-  height: 210px;
-  border: 1px solid var(--color-primary);
-}
-
 .mt16 {
   margin-top: 16px !important;
 }

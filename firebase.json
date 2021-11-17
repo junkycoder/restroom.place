@@ -16,6 +16,10 @@
         "destination": "/room/create.html"
       },
       {
+        "source": "/room/**/print",
+        "destination": "/room/print.html"
+      },
+      {
         "source": "/room/**/init",
         "destination": "/room/init.html"
       },

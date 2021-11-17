@@ -35,9 +35,16 @@ export function isLocalhost() {
  * @returns
  */
 export function createElementFromHTML(htmlString) {
-  var div = document.createElement('div');
+  var div = document.createElement("div");
   div.innerHTML = htmlString.trim();
 
   // Change this to div.childNodes to support multiple top-level nodes
   return div.firstChild;
+}
+
+export function getUrlParam(paramName, urlStr = window.location.href) {
+  const url = new URL(urlStr);
+  const urlParams = new URLSearchParams(url.search);
+  console.log(urlParams, paramName, url)
+  return urlParams.get(paramName);
 }

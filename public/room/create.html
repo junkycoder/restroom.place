@@ -78,8 +78,6 @@
   <script type="module">
     import { isCurrentUserVerified } from "/authentication.js";
     import { generateRoom } from "/functions.js";
-    import { toPng } from "https://unpkg.com/html-to-image@1.9.0?module";
-    import { createElementFromHTML } from "/library.js";
 
     const button = document.querySelector('#create button[type="submit"]');
 
@@ -98,45 +96,7 @@
 
       try {
         const { data: qrImage } = await generateRoom({ roomId });
-
-        const stickerElement = createElementFromHTML(`
-          <div id="sticker">
-            <div>
-              <span>Napiš něco na zeď</span>
-            </div>
-            <img src=${qrImage} title="QR kód" />
-            <div>
-              <span>${roomId}</span>
-            </div>
-          </div>
-        `);
-
-        const sticker = await toPng(stickerElement, {
-          style: {
-            backgroundColor: '#fff',
-            textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          canvasWidth: 100, canvasHeight: 210,
-          // width: 180 / 2, height: 210 / 2,
-          quality: 2
-        });
-
-        document.querySelector('main').innerHTML = `
-          <img class="room-sticker mb16" src="${sticker}" alt="QR" />
-          <div class="download-qr-tip mb16">
-            Zmáčkněte pro uložení nebo přímo tisk nálepky.
-          </div>
-          <p class="disclaimer">
-            Poté můžete okno zavřít<br>
-            a pokračovat načtením nalepené nálepky.<br>
-            (stačí k tomu fotoaparát v telefonu)
-          </p>
-        `;
-
+        window.location.href = `/room/${roomId}/print?qr=${encodeURIComponent(qrImage)}`;
       } catch (error) {
         console.error(error);
         alert("Nastala chyba.");
@@ -144,21 +104,9 @@
         button.removeAttribute("disabled");
       }
 
-
     });
   </script>
 
-  <script src="https://unpkg.com/qrious@4.0.2/dist/qrious.js"></script>
-  <canvas id="qrcode"></canvas>
-  <script>
-const element = document.getElementById("qrcode");
-    const qr = new QRious({
-      element,
-      value: "http://jindo.dev.naver.com/collie"
-    });
-    document.replaceChild(qr.image, element);
-
-  </script>
 </body>
 
 </html>
