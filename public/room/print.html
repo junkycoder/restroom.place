@@ -45,10 +45,6 @@
       flex: 1;
     }
 
-    footer {
-      font-size: small;
-      flex: 1;
-    }
   </style>
   <style media="print">
     header,
@@ -82,7 +78,21 @@
     </div>
   </main>
   <footer class="center-flex center-text">
-    <p>Pomocí funkce sdílet nálepku snadno <br>(vytisknete nebo nasílíte někomu s tiskárnou)</p>
+    <button id="print">Vytisknout</button>
+    <p class="disclaimer m16">
+      Pomocí funkce sdílet nálepku snadno <br>
+      (vytisknete nebo nasílíte někomu s tiskárnou)
+    </p>
+    <script type="module">
+      const printButton = document.querySelector('#print');
+      if (!window.print) {
+        printButton.remove();
+      } else {
+        printButton.addEventListener('click', () => {
+          window.print();
+        });
+      }
+    </script>
   </footer>
 </body>
 
