@@ -5,7 +5,7 @@
 
 
 html, body {
-  height: 100%;
+  height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
 }
 
 body {
@@ -41,7 +41,9 @@ input[type="text"], input[type="email"], textarea {
   box-sizing: border-box;
 }
 
-main button, main a.button {
+main button,
+footer button,
+main a.button {
   font-size: 1.5em;
   margin: 8px auto;
   display: block;
