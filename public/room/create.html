@@ -74,9 +74,10 @@
   <script type="module">
     import { isCurrentUserVerified } from "/authentication.js";
     import { generateRoom } from "/functions.js";
-    import { toBlob } from "https://unpkg.com/html-to-image@1.9.0?module";
+    import { toPng } from "https://unpkg.com/html-to-image@1.9.0?module";
 
     const button = document.querySelector('#create button[type="submit"]');
+
 
     document.querySelector('form#create').addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -92,9 +93,9 @@
 
       try {
         const { data: qrCodeBase64ImageSource } = await generateRoom({ roomId });
-        const contentElement = document.querySelector('main');
-        contentElement.innerHTML = `
-          <div class="room-sticker">
+
+        document.querySelector('main').innerHTML = `
+          <div class="room-sticker" id="sticker">
             <div>
               <span>Napiš něco na zeď</span>
             </div>
@@ -103,21 +104,21 @@
               <span>${roomId}</span>
             </div>
           </div>
-          <button id="share">Sdílet (vytisknout)</button>
+          <a class="hidden" aria-hidden="true" href="#" download="restroom.place.${roomId}.png" id="download"></a>
+          <button id="share">Uložit nálepku</button>
           <p class="disclaimer">
             Poté můžete okno zavřít<br>
             a pokračovat načtením nalepeného QR kódu.<br>
             (stačí k tomu fotoaparát v telefonu)
           </p>
         `;
+
+        const sticker = await toPng(document.querySelector('#sticker'), { width: 150, height: 208 });
+        document.querySelector('#download').setAttribute('href', sticker);
+
         document.querySelector('#share').addEventListener('click', async (event) => {
           event.preventDefault();
-          const sticker = await toBlob(contentElement);
-          console.log(sticker);
-          debugger;
-          window.navigator.share({
-            files: [sticker]
-          })
+          document.querySelector('#download').click();
         })
       } catch (error) {
         console.error(error);

@@ -37,11 +37,15 @@ input[type="text"], input[type="email"], textarea {
   box-sizing: border-box;
 }
 
-main button {
+main button, main a.button {
   font-size: 1.5em;
   margin: 8px auto;
   display: block;
   text-align: center;
+
+}
+main a.button {
+  text-decoration: none;
 }
 
 main button ~ p {
@@ -49,12 +53,12 @@ main button ~ p {
 }
 
 .room-sticker {
-    box-sizing: border-box;
-    border: 1px solid var(--color-primary);
-    padding: 12px 4px;
-    width: 150px;
-    margin: 16px auto;
-    text-align: center;
+  box-sizing: border-box;
+  border: 1px solid var(--color-primary);
+  padding: 12px 4px;
+  width: 150px;
+  margin: 16px auto;
+  text-align: center;
 }
 .room-sticker img {
     width: 100%;
