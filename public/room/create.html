@@ -114,6 +114,7 @@
           event.preventDefault();
           const sticker = await toBlob(contentElement);
           console.log(sticker);
+          debugger;
           window.navigator.share({
             files: [sticker]
           })
