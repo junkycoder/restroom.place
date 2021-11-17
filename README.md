@@ -12,6 +12,8 @@ Místo, kde anonymně zanecháte vzkat pro ostatni spolusráče.
 * FE = `public/`, `firebase.json`
 * BE = `functions/`, `firebase.rules`, `storage.rules`
 
+## Deployment
+Hosting automaticky pri push, backend funkce pomoci `firebase deploy --only functions` - musíš ale mít Node 14.
 ## Logs
 
 - [x] Firebase inicializovaná. 
@@ -26,4 +28,4 @@ Místo, kde anonymně zanecháte vzkat pro ostatni spolusráče.
 
 - [x] Emulatory vseho nahozeny
 
-- [ ] Print QR code sticker
+- [x] Print QR code sticker

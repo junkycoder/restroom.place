@@ -9,13 +9,14 @@
   <link media="screen" rel="stylesheet" href="/styles.css">
   <script type="module" src="/runtime.js"></script>
   <style media="screen">
-    main form label {
-      display: block;
-      margin-bottom: 8px;
+    body {
+      min-height: 99.9vh;
     }
-    .done-message {
-      text-align: center;
-      margin: 16px;
+    form > div {
+      margin: 32px 16px;
+    }
+    form label {
+      display: block;
     }
   </style>
 </head>
@@ -23,25 +24,26 @@
 <body>
   <header>
     <h1>Ověření uživatele</h1>
-    <p>Staňte se ověřeným uživatelem a získáte funkce navíc.</p>
+    <p>Staňte se ověřeným uživatelem<br> a získáte funkce navíc.</p>
+  </header>
+  <main>
     <ul>
       <li>Zpětný přístup do všech navštívených místností</li>
       <li>Vytvoření vlastních místností</li>
     </ul>
-    </p>
-  </header>
-  <main>
     <form method="POST" id="verify">
-      <label>
-        <span>e-mail</span>
-        <input type="email" name="email" placeholder="e-mail" required>
-      </label>
-      <label>
-        <input type="checkbox" name="terms" required />
-        <span>Chápu <a href="/conditions.html">podmínky</a> a souhlasím s nimi</span>
-      </label>
-      <p class="disclaimer">Po odeslání vám na e-mail dorazí přihlašovací odkaz.</p>
-      <button type="submit">Odeslat</button>
+      <div>
+        <label>
+          <span>e-mail</span>
+          <input type="email" name="email" placeholder="e-mail" required>
+        </label>
+        <label class="mt8">
+          <input type="checkbox" name="terms" required />
+          <span>Chápu <a href="/conditions.html">podmínky</a> a souhlasím s nimi</span>
+        </label>
+      </div>
+        <button type="submit">Odeslat</button>
+        <p class="disclaimer">Po odeslání vám na e-mail dorazí přihlašovací odkaz.</p>
     </form>
   </main>
   <script type="module">
@@ -63,8 +65,12 @@
           return;
         }
         const destination = new URL(window.location.href).searchParams.get('destination');
-        await sendMagicLink({ email, destination });
-        document.querySelector('main').innerHTML = '<p class="done-message"><strong>Na váš e-mail byl odeslán přihlašovací odkaz.</strong></p>';
+        // await sendMagicLink({ email, destination });
+        document.querySelector('header').innerHTML = `
+          <h1>Otevřete si e-mail</h1>
+          <p>Na váš e-mail byl odeslán přihlašovací odkaz.</p>
+        `;
+        document.querySelector('main').innerHTML = '';
 
       });
     } catch (O_e) {
