@@ -74,7 +74,7 @@
   <script type="module">
     import { isCurrentUserVerified } from "/authentication.js";
     import { generateRoom } from "/functions.js";
-    import { toPng } from "https://unpkg.com/html-to-image@1.9.0?module";
+    import { toBlob } from "https://unpkg.com/html-to-image@1.9.0?module";
 
     const button = document.querySelector('#create button[type="submit"]');
 
@@ -112,10 +112,10 @@
         `;
         document.querySelector('#share').addEventListener('click', async (event) => {
           event.preventDefault();
-          const sticker = await toPng(contentElement);
+          const sticker = await toBlob(contentElement);
           console.log(sticker);
           window.navigator.share({
-            url: sticker
+            files: [sticker]
           })
         })
       } catch (error) {
