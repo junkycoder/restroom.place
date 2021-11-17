@@ -28,3 +28,16 @@ export function isLocalhost() {
   const url = new URL(import.meta.url);
   return url.hostname === "localhost";
 }
+
+/**
+ * source: https://stackoverflow.com/a/494348/13890034
+ * @param {String} htmlString
+ * @returns
+ */
+export function createElementFromHTML(htmlString) {
+  var div = document.createElement('div');
+  div.innerHTML = htmlString.trim();
+
+  // Change this to div.childNodes to support multiple top-level nodes
+  return div.firstChild;
+}

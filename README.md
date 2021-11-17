@@ -25,3 +25,5 @@ Místo, kde anonymně zanecháte vzkat pro ostatni spolusráče.
 - [x] Firebase signInWithEmailLink
 
 - [x] Emulatory vseho nahozeny
+
+- [ ] Print QR code sticker

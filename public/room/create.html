@@ -27,6 +27,10 @@
       margin-bottom: 4px;
       width: 100%;
     }
+
+    .download-qr-tip {
+      text-align: center;
+    }
   </style>
   <script type="module">
     import { isMagicLink, confirmMagicLink, isCurrentUserVerified } from "/authentication.js";
@@ -75,11 +79,12 @@
     import { isCurrentUserVerified } from "/authentication.js";
     import { generateRoom } from "/functions.js";
     import { toPng } from "https://unpkg.com/html-to-image@1.9.0?module";
+    import { createElementFromHTML } from "/library.js";
 
     const button = document.querySelector('#create button[type="submit"]');
 
 
-    document.querySelector('form#create').addEventListener('submit', async (event) => {
+    document.querySelector('form#create')?.addEventListener('submit', async (event) => {
       event.preventDefault();
       button.setAttribute("disabled", true);
 
@@ -92,34 +97,46 @@
       const roomId = event.target.identificator.value || Date.now();
 
       try {
-        const { data: qrCodeBase64ImageSource } = await generateRoom({ roomId });
+        const { data: qrImage } = await generateRoom({ roomId });
 
-        document.querySelector('main').innerHTML = `
-          <div class="room-sticker" id="sticker">
+        const stickerElement = createElementFromHTML(`
+          <div id="sticker">
             <div>
               <span>Napiš něco na zeď</span>
             </div>
-            <img src=${qrCodeBase64ImageSource} title="QR kód" />
+            <img src=${qrImage} title="QR kód" />
             <div>
               <span>${roomId}</span>
             </div>
           </div>
-          <a class="hidden" aria-hidden="true" href="#" download="restroom.place.${roomId}.png" id="download"></a>
-          <button id="share">Uložit nálepku</button>
+        `);
+
+        const sticker = await toPng(stickerElement, {
+          style: {
+            backgroundColor: '#fff',
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          },
+          canvasWidth: 100, canvasHeight: 210,
+          // width: 180 / 2, height: 210 / 2,
+          quality: 2
+        });
+
+        document.querySelector('main').innerHTML = `
+          <img class="room-sticker mb16" src="${sticker}" alt="QR" />
+          <div class="download-qr-tip mb16">
+            Zmáčkněte pro uložení nebo přímo tisk nálepky.
+          </div>
           <p class="disclaimer">
             Poté můžete okno zavřít<br>
-            a pokračovat načtením nalepeného QR kódu.<br>
+            a pokračovat načtením nalepené nálepky.<br>
             (stačí k tomu fotoaparát v telefonu)
           </p>
         `;
 
-        const sticker = await toPng(document.querySelector('#sticker'), { width: 150, height: 208 });
-        document.querySelector('#download').setAttribute('href', sticker);
-
-        document.querySelector('#share').addEventListener('click', async (event) => {
-          event.preventDefault();
-          document.querySelector('#download').click();
-        })
       } catch (error) {
         console.error(error);
         alert("Nastala chyba.");
@@ -129,6 +146,18 @@
 
 
     });
+  </script>
+
+  <script src="https://unpkg.com/qrious@4.0.2/dist/qrious.js"></script>
+  <canvas id="qrcode"></canvas>
+  <script>
+const element = document.getElementById("qrcode");
+    const qr = new QRious({
+      element,
+      value: "http://jindo.dev.naver.com/collie"
+    });
+    document.replaceChild(qr.image, element);
+
   </script>
 </body>
 

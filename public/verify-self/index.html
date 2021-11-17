@@ -51,7 +51,7 @@
     const form = document.getElementById('verify');
 
     try {
-      form.querySelector('input[type="email"]').value = localStorage.getItem('emailForSignIn');
+      form.querySelector('input[type="email"]').value = localStorage.getItem('emailForSignIn') || '';
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
         button.setAttribute("disabled", true);

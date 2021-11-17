@@ -53,19 +53,18 @@ main button ~ p {
 }
 
 .room-sticker {
-  box-sizing: border-box;
+  display: block;
+  margin: 0 auto;
+  width: 180px;
+  height: 210px;
   border: 1px solid var(--color-primary);
-  padding: 12px 4px;
-  width: 150px;
-  margin: 16px auto;
-  text-align: center;
-}
-.room-sticker img {
-    width: 100%;
 }
 
 .mt16 {
   margin-top: 16px !important;
+}
+.mb16 {
+  margin-bottom: 16px !important;
 }
 
 .mt32 {
