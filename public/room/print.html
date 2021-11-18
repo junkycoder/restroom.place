@@ -66,10 +66,22 @@
       <img src="" alt="QR" id="qr">
       <span id="room-id"></span>
       <script type="module">
-        import { getUrlParam, parseRoomIdFromUrl } from "/library.js";
+        import { parseRoomIdFromUrl } from "/library.js";
+        import { getDocData } from "/firestore.js"
+
         const roomId = parseRoomIdFromUrl();
-        document.querySelector('img#qr').src = getUrlParam('qr');
-        document.querySelector('#room-id').innerText = roomId;
+        const { qr } = await getDocData(`rooms/${roomId}`).catch(console.error) || {};
+
+        if (!qr) {
+          if (window.confirm("Nemáte nálepku. Chcete ji vytvořit?")) {
+            window.location.href = `/room/create`;
+          } else {
+            window.close();
+          }
+        } else {
+          document.querySelector('img#qr').src = qr
+          document.querySelector('#room-id').innerText = roomId;
+        }
       </script>
     </div>
   </main>

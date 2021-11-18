@@ -95,10 +95,17 @@
 
       try {
         const { data: qrImage } = await generateRoom({ roomId });
-        window.location.href = `/room/${roomId}/print?qr=${encodeURIComponent(qrImage)}`;
+        window.location.href = `/room/${roomId}/print`;
       } catch (error) {
-        console.error(error);
-        alert("Nastala chyba.");
+
+        switch (error.code) {
+          case 'functions/already-exists':
+            alert("Místnost s tímto identifikátorem nelze vytvořit.");
+            document.querySelector('input[name="identificator"]')?.focus();
+            break;
+          default:
+            alert("Nastala chyba.");
+        }
       } finally {
         button.removeAttribute("disabled");
       }
