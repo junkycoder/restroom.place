@@ -102,3 +102,7 @@ main button ~ p {
 .hidden {
   display: none !important;
 }
+
+.firebase-emulator-warning {
+  display: none !important;
+}

@@ -34,6 +34,29 @@
       font-size: 14px;
     }
 
+    aside {
+      width: 100%;
+    }
+
+    aside form {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    aside form > textarea {
+      flex: 1;
+    }
+
+    aside form textarea {
+      width: 100%;
+      height: 100%;
+    }
+
+    aside form>div {
+      align-self: flex-end;
+    }
+
     aside button {
       font-size: 16px;
     }
@@ -70,11 +93,10 @@
   </main>
   <aside>
     <form method="POST" id="post" class="hidden" aria-hidden="true">
-      <label>
-        <span>Komentář:</span>
-        <textarea>Já si nic nemyslim!</textarea>
-      </label>
-      <button type="submit">Odeslat</button>
+      <textarea placeholder="Vaše zpráva?" required></textarea>
+      <div>
+        <button type="submit">Odeslat</button>
+      </div>
     </form>
   </aside>
   <script type="module">
