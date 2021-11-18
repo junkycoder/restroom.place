@@ -45,7 +45,7 @@
       gap: 8px;
     }
 
-    aside form > textarea {
+    aside form>textarea {
       flex: 1;
     }
 
@@ -66,32 +66,15 @@
 </head>
 
 <body class="center-flex">
-  <header>
-    <h1><em>Velice dlouhej název místa, může být ale kratší</em></h1>
+  <header class="hidden" aria-hidden="true">
+    <h1></h1>
     <div>
-      <img class="profile-picture" src="/profile.jpg" alt="Profile picture" height="100">
-      <p>
-        A opět velice dlouhý popis místa a jeho okolí, aby lidi měli jistotu že tato virtuální místnost patří k
-        reálnému místu kde je umístěna QR nálepka.
-      </p>
+      <img class="profile-picture" src="" title="Profile picture" height="100">
+      <p></p>
     </div>
   </header>
   <main>
-    <article class="placeholder">
-      <em>Tato zeď je zatím čistá.</em>
-    </article>
-    <!-- <article>
-      <p>Jo, dobře se tu kadí, ale občas to tu pěkně smrdí!</p>
-    </article>
-    <article>
-      <p>Nevíte co bude dnes k obědu?</p>
-    </article>
-    <article>
-      <p>Nice, mají tu i osvěžovač.</p>
-    </article>
-    <article>
-      <p>Kdo zase nepoyžil štětku?! --václav</p>
-    </article> -->
+
   </main>
   <aside>
     <form method="POST" id="post" class="hidden" aria-hidden="true">
@@ -108,8 +91,18 @@
 
     const roomId = parseRoomIdFromUrl();
     const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error) || {};
-    profile.initialized = true;
-    if (profile.initialized) {
+
+    if (!profile.initialized) {
+      document.querySelector("header").innerHTML = `
+        <h1>Místnost zatím není inicializována.</h1>
+      `;
+      document.querySelector("main").innerHTML = `
+        <a class="button" href="/room/${roomId}/init">Inicializovat</a>
+        <p class="disclaimer">A získat titul inicializátora</p>
+      `;
+      document.querySelector("header").classList.remove("hidden")
+      postForm.setAttribute('aria-hidden', false);
+    } else {
       const postForm = document.querySelector("#post");
       postForm.classList.remove("hidden");
       postForm.setAttribute('aria-hidden', false);
@@ -127,7 +120,12 @@
       if (profile.initialized) {
         window.location.href = `/room/${roomId}/edit`;
       }
-    })
+    });
+
+
+    // const posts = await getDocData(`rooms/${roomId}/public/posts`).catch(console.error) || [];
+    const posts = [];
+
   </script>
 </body>
 
