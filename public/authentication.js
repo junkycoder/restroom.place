@@ -6,12 +6,17 @@ import {
   sendSignInLinkToEmail,
   isSignInWithEmailLink,
   signInWithEmailLink,
+  connectAuthEmulator,
 } from "https://www.gstatic.com/firebasejs/9.4.1/firebase-auth.js";
 import { isLocalhost } from "/library.js";
 
 export const auth = getAuth(app);
 
 export let currentUser = (window.currentUser = auth.currentUser);
+
+if (isLocalhost()) {
+  connectAuthEmulator(auth, "http://localhost:9099");
+}
 
 console.time("User load");
 onAuthStateChanged(auth, (user) => {
@@ -25,7 +30,7 @@ onAuthStateChanged(auth, (user) => {
  * @returns {Promise<void>}
  */
 export async function isCurrentUserVerified() {
-  return currentUser && currentUser.emailVerified === true;
+  return Boolean(currentUser && currentUser.emailVerified);
 }
 
 export async function sendMagicLink({
