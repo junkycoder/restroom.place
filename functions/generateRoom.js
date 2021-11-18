@@ -1,8 +1,8 @@
 const functions = require("firebase-functions");
 const qrcode = require("qrcode");
-const { firestore, initializeApp } = require("firebase-admin");
+const admin = require("firebase-admin");
 
-const app = initializeApp();
+const app = admin.initializeApp();
 
 const PROCTION_DOMAIN = "restroom.place";
 
