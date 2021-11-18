@@ -11,7 +11,7 @@
   <style media="screen">
     main h2 {
       font-size: 24px;
-      text-align: center;
+      text-align: left;
     }
   </style>
 </head>
@@ -21,11 +21,19 @@
     <h1>Inicializace místnosti</h1>
   </header>
   <main>
-    <h2>1.<br>Někde na místě nalepte QR kód</h2>
-    <h2>2.<br>Nastavte profilovou fotku místa</h2>
-    <h2>3.<br>Vyplňte místní základní informace</h2>
     <form method="POST" id="publish">
-      <p class="disclaimer mt32">There is no guarantee your room will persist</p>
+      <h2>1. QR kód</h2>
+      <p>Nálepku umístěte někde v místnosti na viditelné místo.</p>
+      <label>
+        <input type="checkbox" name="sticked" required />
+        <span>QR kód nalepen</span>
+      </label>
+      <h2>2. Profilová fotka</h2>
+      <p>Typicky nejvýraznější prvek v místnosti, nebo nějaký pěkný detail.</p>
+      <button id="change-profile-picture">Nastavit profilovku</button>
+      <h2>3. Bio</h2>
+      <p>Popište místo, ať je jasné o co tady jde.</p>
+      <textarea name="bio" placeholder="Nejlepší underground podnik v okolí."></textarea>
       <button type="submit">Publikovat</button>
     </form>
   </main>

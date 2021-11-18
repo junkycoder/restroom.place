@@ -56,9 +56,6 @@ main a.button {
   text-decoration: none;
 }
 
-main button ~ p {
-  text-align: center;
-}
 
 .profile-picture {
   width: 100px;
