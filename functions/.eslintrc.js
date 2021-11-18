@@ -5,8 +5,8 @@ module.exports = {
     node: true,
   },
   extends: [
-    "eslint:recommended",
-    "google",
+    'eslint:recommended',
+    "plugin:prettier/recommended"
   ],
   rules: {
     quotes: ["error", "double"],
