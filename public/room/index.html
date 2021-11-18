@@ -9,21 +9,53 @@
   <script type="module" src="/runtime.js"></script>
   <title>Restroom Place</title>
   <style media="screen">
+    header>div {
+      display: flex;
+      align-items: center;
+    }
+
+    header>div>p {
+      flex: 1;
+      text-align: left;
+      font-style: italic;
+    }
+
+    header .profile-picture {
+      margin-right: 8px;
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+      margin: 16px 0;
+    }
+
+    article.placeholder {
+      font-size: 14px;
+    }
+
     aside button {
       font-size: 16px;
     }
   </style>
 </head>
 
-<body>
+<body class="center-flex">
   <header>
-    <h1>TopMonks pánský u fotbálku</h1>
-    <img src="/profile.jpg" alt="Profile picture" height="100">
-    <p>Místo kde se dobře kadí.</p>
+    <h1><em>Velice dlouhej název místa, může být ale kratší</em></h1>
+    <div>
+      <img class="profile-picture" src="/profile.jpg" alt="Profile picture" height="100">
+      <p>
+        A opět velice dlouhý popis místa a jeho okolí, aby lidi měli jistotu že tato virtuální místnost patří k
+        reálnému místu kde je umístěna QR nálepka.
+      </p>
+    </div>
   </header>
-  <hr>
   <main>
-    <article>
+    <article class="placeholder">
+      <em>Tato zeď je zatím čistá.</em>
+    </article>
+    <!-- <article>
       <p>Jo, dobře se tu kadí, ale občas to tu pěkně smrdí!</p>
     </article>
     <article>
@@ -34,11 +66,10 @@
     </article>
     <article>
       <p>Kdo zase nepoyžil štětku?! --václav</p>
-    </article>
+    </article> -->
   </main>
-  <hr>
   <aside>
-    <form method="POST">
+    <form method="POST" id="post" class="hidden" aria-hidden="true">
       <label>
         <span>Komentář:</span>
         <textarea>Já si nic nemyslim!</textarea>
@@ -52,10 +83,25 @@
 
     const roomId = parseRoomIdFromUrl();
     const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error) || {};
-    console.log({profile})
+    profile.initialized = true;
+    if (profile.initialized) {
+      const postForm = document.querySelector("#post");
+      postForm.classList.remove("hidden");
+      postForm.setAttribute('aria-hidden', false);
+    }
+
+    if (profile.name) {
+      document.querySelector("header h1").innerText = profile.name;
+    }
+
+    if (profile.bio) {
+      document.querySelector("header p").innerText = profile.bio;
+    }
 
     document.querySelector('body header').addEventListener("click", () => {
-      window.location.href = `/room/${roomId}/edit`;
+      if (profile.initialized) {
+        window.location.href = `/room/${roomId}/edit`;
+      }
     })
   </script>
 </body>

@@ -60,6 +60,12 @@ main button ~ p {
   text-align: center;
 }
 
+.profile-picture {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
 
 .mt8 {
   margin-top: 8px !important;
@@ -91,4 +97,8 @@ main button ~ p {
 
 .center-text {
   text-align: center;
+}
+
+.hidden {
+  display: none !important;
 }
