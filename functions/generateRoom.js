@@ -1,5 +1,8 @@
 const functions = require("firebase-functions");
 const qrcode = require("qrcode");
+const { firestore, initializeApp } = require("firebase-admin");
+
+const app = initializeApp();
 
 const PROCTION_DOMAIN = "restroom.place";
 
@@ -19,11 +22,35 @@ function createRoomLink(roomId) {
 exports.generateRoom = functions.https.onCall(async ({ roomId }, context) => {
   const roomUrl = createRoomLink(roomId);
 
-  // check user is verified
-  // check room id is not taken
-  // create QR code
-  const qr = await qrcode.toDataURL(roomUrl);
-  // create room (wildcard) only with id, qr code and creatorId
+  if (!context.auth || !context.auth.token.email_verified) {
+    throw new functions.https.HttpsError(
+      "unauthenticated",
+      "The function must be called while authenticated."
+    );
+  }
 
-  return qr;
+  const db = app.firestore();
+  const ref = db.doc(`rooms/${roomId}`);
+  const qr = await qrcode.toDataURL(roomUrl);
+
+  return db.runTransaction(async (transaction) => {
+    const doc = await transaction.get(ref);
+
+    if (doc.exists) {
+      throw new functions.https.HttpsError(
+        "already-exists",
+        "The room already exists."
+      );
+    }
+
+    await transaction.create(ref, {
+      id: roomId,
+      qr,
+      creatorId: context.auth.uid,
+      initialized: false,
+      createdAt: firestore.FieldValue.serverTimestamp(),
+    });
+
+    return qr;
+  });
 });
