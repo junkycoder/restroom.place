@@ -9,9 +9,9 @@ service cloud.firestore {
     match /rooms/{roomId} {
       allow read, write: if isCreator();
     }
-    match /rooms/{roomId}/profile {
-      allow read, write: if isCreator()
-      allow get: if true; // public profile
+    match /rooms/{roomId}/public/{subdoc=**} {
+      allow get: if true; // public but readonly
+      allow read, update: if isCreator();
     }
   }
 }

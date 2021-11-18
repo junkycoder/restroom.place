@@ -31,10 +31,12 @@ exports.generateRoom = functions.https.onCall(async ({ roomId }, context) => {
 
   const db = app.firestore();
   const ref = db.doc(`rooms/${roomId}`);
+  const profileRef = db.doc(`rooms/${roomId}/public/profile`);
   const qr = await qrcode.toDataURL(roomUrl);
 
   return db.runTransaction(async (transaction) => {
     const doc = await transaction.get(ref);
+    const profileDoc = await transaction.get(profileRef);
 
     if (doc.exists) {
       throw new functions.https.HttpsError(
@@ -47,8 +49,13 @@ exports.generateRoom = functions.https.onCall(async ({ roomId }, context) => {
       id: roomId,
       qr,
       creatorId: context.auth.uid,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    await transaction.create(profileRef, {
+      roomId,
       initialized: false,
-      createdAt: firestore.FieldValue.serverTimestamp(),
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
     return qr;

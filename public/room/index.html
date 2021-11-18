@@ -47,8 +47,12 @@
     </form>
   </aside>
   <script type="module">
-    import { parseRoomIdFromUrl } from "../library.js";
+    import { parseRoomIdFromUrl } from "/library.js";
+    import { getDocData } from "/firestore.js"
+
     const roomId = parseRoomIdFromUrl();
+    const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error) || {};
+    console.log({profile})
 
     document.querySelector('body header').addEventListener("click", () => {
       window.location.href = `/room/${roomId}/edit`;

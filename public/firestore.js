@@ -16,6 +16,8 @@ if (isLocalhost()) {
   connectFirestoreEmulator(db, "localhost", 8080);
 }
 
+// enableIndexedDbPersistence
+
 export async function getDocData(path) {
   const snap = await getDoc(doc(db, path));
   return snap.data();
