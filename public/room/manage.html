@@ -83,7 +83,8 @@
       const formData = new FormData(event.target);
 
       try {
-        await uploadProfilePicture({ roomId, file: formData.get('picture') });
+        const file = formData.get('picture');
+        if (file) await uploadProfilePicture({ roomId, file });
         await updateRoom({
           roomId,
           name: formData.get('name'),
