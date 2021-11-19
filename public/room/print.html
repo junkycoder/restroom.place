@@ -40,6 +40,9 @@
     main {
       flex: 1;
     }
+    footer {
+      padding-bottom: 32px;
+    }
   </style>
   <style media="print">
     header,
@@ -85,20 +88,14 @@
       </script>
     </div>
   </main>
-  <footer class="center-flex center-text">
-    <button id="print" type="submit">Vytisknout</button>
-    <p class="disclaimer m16">
-      Můžete také sdílet tuto stránku někomu někomu jinému.
+  <footer class="center-text">
+    <a class="button" href="javascript:print()">Vytisknout</a>
+    <p class="disclaimer">
+      Také je možné tuto stránku sdílet někomu jinému.
     </p>
     <script type="module">
       const printButton = document.querySelector('#print');
-      if (!window.print) {
-        printButton.remove();
-      } else {
-        printButton.addEventListener('click', () => {
-          window.print();
-        });
-      }
+      if (!window.print) printButton.remove();
     </script>
   </footer>
 </body>
