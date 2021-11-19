@@ -125,10 +125,10 @@
       postForm.setAttribute('aria-hidden', false);
     }
 
-    if (profile) {
-      document.querySelector("header h1").innerText = profile.name;
-      document.querySelector("header p").innerText = profile.bio;
-      document.querySelector("header img").src = profile.picture;
+    if (profile.initialized) {
+      document.querySelector("header h1").innerText = profile.name || '';
+      document.querySelector("header p").innerText = profile.bio || '';
+      document.querySelector("header img").src = profile.picture || '#';
 
       document.querySelector("header").classList.remove("hidden")
       document.querySelector("header").setAttribute('aria-hidden', false);
