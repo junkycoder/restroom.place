@@ -15,3 +15,7 @@ if (isLocalhost()) {
 export async function generateRoom({ roomId }) {
   return httpsCallable(functions, "generateRoom")({ roomId });
 }
+
+export async function updateRoom({ roomId, name, bio, picture }) {
+  return httpsCallable(functions, "updateRoom")({ roomId, name, bio, picture });
+}

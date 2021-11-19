@@ -9,6 +9,10 @@
   <script type="module" src="/runtime.js"></script>
   <title>Restroom Place</title>
   <style media="screen">
+    header {
+      width: 100%;
+    }
+
     header>div {
       display: flex;
       align-items: center;
@@ -69,7 +73,7 @@
   <header class="hidden" aria-hidden="true">
     <h1></h1>
     <div>
-      <img class="profile-picture" src="" title="Profile picture" height="100">
+      <img class="profile-picture" src="#" title="Profile picture" height="100">
       <p></p>
     </div>
   </header>
@@ -93,7 +97,7 @@
     const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error);
 
     if (!profile) {
-      alert("Místnost neexistuje, můžete ji vytvořit.")
+      alert("Místnost neexistuje, ale můžete ji vytvořit.")
       window.location.href = roomId ? '/room/generate' : `/room/generate?roomId=${roomId}`;
     }
 
@@ -103,7 +107,7 @@
       `;
       document.querySelector("main").innerHTML = `
         <a id="manage-room" class="button" href="/room/${roomId}/manage">Spravovat místnost</a>
-        <p class="disclaimer"></p>
+        <p class="disclaimer">Získáte moc nad tímto místem.</p>
       `;
       document.querySelector("header").classList.remove("hidden")
       document.querySelector("header").setAttribute('aria-hidden', false);
@@ -121,12 +125,13 @@
       postForm.setAttribute('aria-hidden', false);
     }
 
-    if (profile.name) {
+    if (profile) {
       document.querySelector("header h1").innerText = profile.name;
-    }
-
-    if (profile.bio) {
       document.querySelector("header p").innerText = profile.bio;
+      document.querySelector("header img").src = profile.picture;
+
+      document.querySelector("header").classList.remove("hidden")
+      document.querySelector("header").setAttribute('aria-hidden', false);
     }
 
     document.querySelector('body header').addEventListener("click", () => {

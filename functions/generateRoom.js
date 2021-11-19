@@ -2,7 +2,6 @@ const functions = require("firebase-functions");
 const qrcode = require("qrcode");
 const admin = require("firebase-admin");
 
-const app = admin.initializeApp();
 
 const PROCTION_DOMAIN = "restroom.place";
 
@@ -29,7 +28,7 @@ exports.generateRoom = functions.https.onCall(async ({ roomId }, context) => {
     );
   }
 
-  const db = app.firestore();
+  const db = admin.firestore();
   const ref = db.doc(`rooms/${roomId}`);
   const profileRef = db.doc(`rooms/${roomId}/public/profile`);
   const qr = await qrcode.toDataURL(roomUrl);

@@ -35,7 +35,7 @@
     </p>
   </header>
   <main>
-    <form method="POST" id="publish">
+    <form method="POST" id="update">
       <h2>1. QR kód</h2>
       <p>Nálepku umístěte někde v místnosti na viditelné místo.</p>
       <label>
@@ -44,23 +44,74 @@
       </label>
       <h2>2. Profilová fotka</h2>
       <p>Typicky nejvýraznější prvek v místnosti, nebo nějaký pěkný detail.</p>
-      <label>
-        <input type="file" id="profile-picture" name="profile-picture" accept="image/png, image/jpeg" required>
+      <label id="profile-picture-upload-file">
+        <input type="file" id="profile-picture" name="picture" accept="image/png, image/jpeg" required>
         <span class="profile-picture-hint">👆 vyberte fotku, nebo pořiďte novou...</span>
       </label>
-      <h2>3. Bio</h2>
-      <p>Popište místo, ať je jasné o co tady jde.</p>
-      <textarea required name="bio" placeholder="Nejlepší underground podnik v okolí."></textarea>
+      <h2>3. Název a Bio</h2>
+      <p>Uveďte výstižné jméno a stručný popis místa, ať je jasné o co tady jde.</p>
+      <input maxlength="72" type="text" name="name" required placeholder="U Zádi" class="mb16" />
+      <textarea maxlength="256" required name="bio" placeholder="Nejlepší underground podnik v okolí."></textarea>
       <button type="submit">Publikovat</button>
     </form>
   </main>
   <script type="module">
+    import { updateRoom } from "/functions.js";
     import { parseRoomIdFromUrl } from "/library.js";
+    import { getDocData } from "/firestore.js"
+    import { uploadProfilePicture } from "/storage.js";
+
     const roomId = parseRoomIdFromUrl();
-    document.querySelector('form#publish').addEventListener('submit', (event) => {
+    const button = document.querySelector('button[type="submit"]');
+
+    document.querySelector('form#update').addEventListener('submit', async (event) => {
       event.preventDefault();
-      window.location.href = `/room/${roomId}`;
+      button.setAttribute('disabled', true);
+
+      const formData = new FormData(event.target);
+
+      try {
+        const url = await uploadProfilePicture({ roomId, file: formData.get('picture') });
+        await updateRoom({
+          roomId,
+          name: formData.get('name'),
+          picture: url,
+          bio: formData.get('bio'),
+        });
+
+        window.location.href = `/room/${roomId}`;
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+      } finally {
+        button.removeAttribute('disabled');
+      }
     });
+
+    const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error);
+
+    if (!profile) {
+      alert("Tato místnost neexistuje. Můžete si ji ale vytvořit.")
+      window.location.href = `/room/generate?roomId=${roomId}`
+    }
+
+    if (profile?.initialized) {
+      document.querySelector('input[name="sticked"]').checked = true;
+      document.querySelector('textarea[name="bio"]').innterText = profile.bio;
+    }
+
+    if (profile?.picture) {
+      const pictureElement = document.createElement('img');
+      pictureElement.src = profile.picture;
+      pictureElement.classList.add('profile-picture');
+      document.querySelector('#profile-picture-upload-file').insertBefore(pictureElement);
+    }
+    if (profile) {
+      document.querySelector('input[name="name"]').value = profile.name;
+      document.querySelector('textarea[name="bio"]').innerText = profile.bio;
+
+    }
+
   </script>
 </body>
 
