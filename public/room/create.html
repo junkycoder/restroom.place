@@ -32,31 +32,6 @@
       text-align: center;
     }
   </style>
-  <script type="module">
-    import { isMagicLink, confirmMagicLink, isCurrentUserVerified } from "/authentication.js";
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      console.time('User verification')
-      try {
-        if (isMagicLink()) {
-          await confirmMagicLink();
-          window.location.search = '';
-        }
-      } catch (error) {
-        console.error(error);
-
-        if (error.code === 'auth/invalid-action-code') {
-          alert("Neplatný odkaz, zkuste to znovu.");
-          window.location.href = `/verify-self?destination=${encodeURIComponent('/room/create')}`;
-        } else {
-          alert("Nastala chyba.");
-        }
-
-      } finally {
-        console.timeEnd('User verification')
-      }
-    });
-  </script>
 </head>
 
 <body>
