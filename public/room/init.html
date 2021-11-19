@@ -9,9 +9,13 @@
   <script type="module" src="/runtime.js"></script>
   <title>Inicializace - Restroom Place</title>
   <style media="screen">
+    main {
+      padding-bottom: 12px;
+    }
     main h2 {
       font-size: 24px;
       text-align: left;
+      margin-top: 32px;
     }
     .profile-picture-hint {
       font-size: 12px;
@@ -23,7 +27,7 @@
 <body>
   <header>
     <h1>Inicializace místnosti</h1>
-    <p></p>
+    <p>Jakožto incializátor získáte oprávnění místnost spravovat.</p>
   </header>
   <main>
     <form method="POST" id="publish">
@@ -37,7 +41,7 @@
       <p>Typicky nejvýraznější prvek v místnosti, nebo nějaký pěkný detail.</p>
       <!-- <button id="change-profile-picture">Nastavit profilovku</button> -->
       <label>
-        <input type="file" id="profile-picture" name="profile-picture" accept="image/png, image/jpeg">
+        <input type="file" id="profile-picture" name="profile-picture" accept="image/png, image/jpeg" required>
         <span class="profile-picture-hint">👆 vyberte fotku, nebo pořiďte novou...</span>
       </label>
       <h2>3. Bio</h2>
