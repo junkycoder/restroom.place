@@ -71,7 +71,7 @@
     import { updateRoom } from "/functions.js";
     import { parseRoomIdFromUrl } from "/library.js";
     import { getDocData } from "/firestore.js"
-    import { uploadProfilePicture } from "/storage.js";
+    import { uploadProfilePicture, getRoomProfilePictureUrl } from "/storage.js";
 
     const roomId = parseRoomIdFromUrl();
     const button = document.querySelector('button[type="submit"]');
@@ -114,7 +114,7 @@
 
     if (profile?.picture) {
       const pictureElement = document.createElement('img');
-      pictureElement.src = profile.picture;
+      pictureElement.src = await getRoomProfilePictureUrl(roomId);
       pictureElement.classList.add('profile-picture');
       pictureElement.classList.add('profile-picture--small');
       document.querySelector('.profile-picture-upload-file').prepend(pictureElement);
