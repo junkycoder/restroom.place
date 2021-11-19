@@ -55,10 +55,10 @@
       <h2>2. Profilová fotka</h2>
       <p>Typicky nejvýraznější prvek v místnosti, nebo nějaký pěkný detail.</p>
       <label class="profile-picture-upload-file">
-      <div>
-        <input type="file" id="profile-picture" name="picture" accept="image/png, image/jpeg" required>
-        <span class="profile-picture-hint">👆 vyberte fotku, nebo pořiďte novou...</span>
-      </div>
+        <div>
+          <input type="file" id="profile-picture" name="picture" accept="image/png, image/jpeg" required>
+          <span class="profile-picture-hint">👆 vyberte fotku, nebo pořiďte novou...</span>
+        </div>
       </label>
       <h2>3. Název a Bio</h2>
       <p>Uveďte výstižné jméno a stručný popis místa, ať je jasné o co tady jde.</p>
@@ -112,11 +112,13 @@
       document.querySelector('textarea[name="bio"]').innterText = profile.bio;
     }
 
-    if (profile?.picture) {
+    const pictureUrl = await getRoomProfilePictureUrl(roomId);
+
+    if (pictureUrl) {
       const pictureElement = document.createElement('img');
-      pictureElement.src = await getRoomProfilePictureUrl(roomId);
       pictureElement.classList.add('profile-picture');
       pictureElement.classList.add('profile-picture--small');
+      pictureElement.src = pictureUrl;
       document.querySelector('.profile-picture-upload-file').prepend(pictureElement);
       document.querySelector('input[name="picture"]').required = false;
     }
