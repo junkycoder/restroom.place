@@ -19,6 +19,15 @@
       margin-top: 32px;
     }
 
+    .profile-picture-upload-file {
+      display: flex;
+      gap: 16px;
+    }
+
+    .profile-picture-upload-file input {
+      font-size: 12px;
+    }
+
     .profile-picture-hint {
       font-size: 12px;
       display: block;
@@ -44,9 +53,11 @@
       </label>
       <h2>2. Profilová fotka</h2>
       <p>Typicky nejvýraznější prvek v místnosti, nebo nějaký pěkný detail.</p>
-      <label id="profile-picture-upload-file">
+      <label class="profile-picture-upload-file">
+      <div>
         <input type="file" id="profile-picture" name="picture" accept="image/png, image/jpeg" required>
         <span class="profile-picture-hint">👆 vyberte fotku, nebo pořiďte novou...</span>
+      </div>
       </label>
       <h2>3. Název a Bio</h2>
       <p>Uveďte výstižné jméno a stručný popis místa, ať je jasné o co tady jde.</p>
@@ -104,12 +115,11 @@
       const pictureElement = document.createElement('img');
       pictureElement.src = profile.picture;
       pictureElement.classList.add('profile-picture');
-      document.querySelector('#profile-picture-upload-file').insertBefore(pictureElement);
+      document.querySelector('.profile-picture-upload-file').prepend(pictureElement);
     }
     if (profile) {
       document.querySelector('input[name="name"]').value = profile.name || '';
       document.querySelector('textarea[name="bio"]').innerText = profile.bio || '';
-
     }
 
   </script>
