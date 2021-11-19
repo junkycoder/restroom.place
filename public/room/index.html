@@ -143,6 +143,13 @@
     // const posts = await getDocData(`rooms/${roomId}/public/posts`).catch(console.error) || [];
     const posts = [];
 
+    if (!posts.length) {
+      document.querySelector("main").innerHTML = `
+        <article class="placeholder">
+          <p>Zatím nejsou zde žádné příspěvky.</p>
+        </article>
+      `;
+    }
   </script>
 </body>
 

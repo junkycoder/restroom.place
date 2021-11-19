@@ -36,7 +36,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
       alert("Nastala chyba.");
     }
-  } finally {
-    console.timeEnd("User verification");
   }
 });
