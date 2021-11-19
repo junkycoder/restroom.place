@@ -19,6 +19,7 @@
 <body>
   <header>
     <h1>Inicializace místnosti</h1>
+    <p></p>
   </header>
   <main>
     <form method="POST" id="publish">
@@ -30,7 +31,8 @@
       </label>
       <h2>2. Profilová fotka</h2>
       <p>Typicky nejvýraznější prvek v místnosti, nebo nějaký pěkný detail.</p>
-      <button id="change-profile-picture">Nastavit profilovku</button>
+      <!-- <button id="change-profile-picture">Nastavit profilovku</button> -->
+      <input type="file" id="profile-picture" name="profile-picture" accept="image/png, image/jpeg">
       <h2>3. Bio</h2>
       <p>Popište místo, ať je jasné o co tady jde.</p>
       <textarea name="bio" placeholder="Nejlepší underground podnik v okolí."></textarea>
