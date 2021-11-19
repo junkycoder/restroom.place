@@ -117,6 +117,7 @@
       pictureElement.classList.add('profile-picture');
       pictureElement.classList.add('profile-picture--small');
       document.querySelector('.profile-picture-upload-file').prepend(pictureElement);
+      document.querySelector('input[name="picture"]').required = false;
     }
     if (profile) {
       document.querySelector('input[name="name"]').value = profile.name || '';
