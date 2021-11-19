@@ -107,8 +107,8 @@
       document.querySelector('#profile-picture-upload-file').insertBefore(pictureElement);
     }
     if (profile) {
-      document.querySelector('input[name="name"]').value = profile.name;
-      document.querySelector('textarea[name="bio"]').innerText = profile.bio;
+      document.querySelector('input[name="name"]').value = profile.name || '';
+      document.querySelector('textarea[name="bio"]').innerText = profile.bio || '';
 
     }
 
