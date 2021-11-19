@@ -13,6 +13,10 @@
       font-size: 24px;
       text-align: left;
     }
+    .profile-picture-hint {
+      font-size: 12px;
+      display: block;
+    }
   </style>
 </head>
 
@@ -32,10 +36,13 @@
       <h2>2. Profilová fotka</h2>
       <p>Typicky nejvýraznější prvek v místnosti, nebo nějaký pěkný detail.</p>
       <!-- <button id="change-profile-picture">Nastavit profilovku</button> -->
-      <input type="file" id="profile-picture" name="profile-picture" accept="image/png, image/jpeg">
+      <label>
+        <input type="file" id="profile-picture" name="profile-picture" accept="image/png, image/jpeg">
+        <span class="profile-picture-hint">👆 vyberte fotku, nebo pořiďte novou...</span>
+      </label>
       <h2>3. Bio</h2>
       <p>Popište místo, ať je jasné o co tady jde.</p>
-      <textarea name="bio" placeholder="Nejlepší underground podnik v okolí."></textarea>
+      <textarea required name="bio" placeholder="Nejlepší underground podnik v okolí."></textarea>
       <button type="submit">Publikovat</button>
     </form>
   </main>
