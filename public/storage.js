@@ -24,7 +24,7 @@ export async function uploadProfilePicture({ roomId, file }) {
 export async function getRoomProfilePictureUrl(roomId) {
   const storageRef = ref(
     storage,
-    `public/rooms/${roomId}/profile${isLocalhost() ? "" : "_420x420"}.jpg`
+    `public/rooms/${roomId}/profile${isLocalhost() ? "" : "_420x420"}.jpeg`
   );
-  return await getDownloadURL(storageRef);
+  return await getDownloadURL(storageRef).catch(console.error);
 }
