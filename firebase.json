@@ -12,8 +12,8 @@
     "trailingSlash": false,
     "rewrites": [
       {
-        "source": "/room/create",
-        "destination": "/room/create.html"
+        "source": "/room/generate",
+        "destination": "/room/generate.html"
       },
       {
         "source": "/room/**/print",

@@ -37,7 +37,7 @@
       <li>jsou anonymní</li>
       <li>mohou číst a reagovat</li>
     </ul>
-    <button id="create-room">Vytvořit místnost¹</button>
+    <button id="generate-room">Vytvořit místnost¹</button>
     <p class="disclaimer">¹Člověk musí bejt ověřenej,<br />
       aby mohl zakládat místnosti.</p>
   </main>
@@ -45,13 +45,13 @@
   <script type="module">
     import { isCurrentUserVerified } from "/authentication.js";
 
-    document.querySelector('button#create-room').addEventListener('click', async (event) => {
+    document.querySelector('button#generate-room').addEventListener('click', async (event) => {
       event.preventDefault();
 
       if (isCurrentUserVerified()) {
-        window.location.href = '/room/create';
+        window.location.href = '/room/generate';
       } else {
-        window.location.href = `/verify-self?destination=${encodeURIComponent('/room/create')}`;
+        window.location.href = `/verify-self?destination=${encodeURIComponent('/room/generate')}`;
       }
     });
   </script>

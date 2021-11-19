@@ -90,7 +90,12 @@
     import { isCurrentUserVerified } from "/authentication.js";
 
     const roomId = parseRoomIdFromUrl();
-    const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error) || {};
+    const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error);
+
+    if (!profile) {
+      alert("Místnost neexistuje, můžete ji vytvořit.")
+      window.location.href = roomId ? '/room/generate' : `/room/generate?roomId=${roomId}`;
+    }
 
     if (!profile.initialized) {
       document.querySelector("header").innerHTML = `

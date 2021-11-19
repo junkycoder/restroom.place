@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Vytvořit místnost - Restroom Place</title>
+  <title>Vygenerovat místnost - Restroom Place</title>
   <link media="screen" rel="stylesheet" href="/styles.css">
   <script type="module" src="/runtime.js"></script>
   <style media="screen">
@@ -40,7 +40,7 @@
     <p>Zde můžete vytvořit QR kód k vytištění.</p>
   </header>
   <main>
-    <form id="create" method="POST">
+    <form id="generate" method="POST">
       <label>
         <span>Identifikátor místnosti:</span>
         <input type="text" name="identificator" placeholder="nepovinné" autocapitalize="false" />
@@ -54,15 +54,21 @@
     import { isCurrentUserVerified } from "/authentication.js";
     import { generateRoom } from "/functions.js";
 
-    const button = document.querySelector('#create button[type="submit"]');
+    const button = document.querySelector('#generate button[type="submit"]');
 
-    document.querySelector('form#create')?.addEventListener('submit', async (event) => {
+    const autoCompleteRoomUrl = new URLSearchParams(location.search).get("roomId");
+    if (autoCompleteRoomUrl) {
+      document.querySelector('input[name="identificator"]').value = autoCompleteRoomUrl;
+    }
+
+    document.querySelector('form#generate')?.addEventListener('submit', async (event) => {
       event.preventDefault();
       button.setAttribute("disabled", true);
 
       if (isCurrentUserVerified() === false) {
         alert("Nemáte ověřený účet, zkontrolujte svůj email.");
-        window.location.href = `/verify-self?destination=${encodeURIComponent('/room/create')}`;
+        const currentUri = window.location.pathname + window.location.search;
+        window.location.href = `/verify-self?destination=${encodeURIComponent(currentUri)}`;
         return;
       }
 
