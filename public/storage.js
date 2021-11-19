@@ -15,13 +15,13 @@ if (isLocalhost()) {
 }
 
 export async function uploadProfilePicture({ roomId, file }) {
-
   const [name, ext] = file.name.split(".");
-  console.log(name, ext);
   const storageRef = ref(storage, `public/rooms/${roomId}/profile.${ext}`);
 
-  const snapshot = await uploadBytes(storageRef, file);
-  console.log("Uploaded a blob or file!", snapshot);
+  await uploadBytes(storageRef, file);
+}
 
+export async function getRoomProfilePictureUrl(roomId) {
+  const storageRef = ref(storage, `public/rooms/${roomId}/profile.jpg`);
   return await getDownloadURL(storageRef);
 }

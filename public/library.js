@@ -45,6 +45,5 @@ export function createElementFromHTML(htmlString) {
 export function getUrlParam(paramName, urlStr = window.location.href) {
   const url = new URL(urlStr);
   const urlParams = new URLSearchParams(url.search);
-  console.log(urlParams, paramName, url)
   return urlParams.get(paramName);
 }
