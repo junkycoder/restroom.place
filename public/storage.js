@@ -22,6 +22,9 @@ export async function uploadProfilePicture({ roomId, file }) {
 }
 
 export async function getRoomProfilePictureUrl(roomId) {
-  const storageRef = ref(storage, `public/rooms/${roomId}/profile.jpg`);
+  const storageRef = ref(
+    storage,
+    `public/rooms/${roomId}/profile${isLocalhost() ? "" : "_420x420"}.jpg`
+  );
   return await getDownloadURL(storageRef);
 }
