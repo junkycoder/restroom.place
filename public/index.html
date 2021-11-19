@@ -48,7 +48,7 @@
     document.querySelector('button#create-room').addEventListener('click', async (event) => {
       event.preventDefault();
 
-      if (await isCurrentUserVerified()) {
+      if (isCurrentUserVerified()) {
         window.location.href = '/room/create';
       } else {
         window.location.href = `/verify-self?destination=${encodeURIComponent('/room/create')}`;

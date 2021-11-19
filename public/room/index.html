@@ -74,7 +74,6 @@
     </div>
   </header>
   <main>
-
   </main>
   <aside>
     <form method="POST" id="post" class="hidden" aria-hidden="true">
@@ -88,6 +87,7 @@
   <script type="module">
     import { parseRoomIdFromUrl } from "/library.js";
     import { getDocData } from "/firestore.js"
+    import { isCurrentUserVerified } from "/authentication.js";
 
     const roomId = parseRoomIdFromUrl();
     const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error) || {};
@@ -97,11 +97,18 @@
         <h1>Místnost zatím není inicializována.</h1>
       `;
       document.querySelector("main").innerHTML = `
-        <a class="button" href="/room/${roomId}/init">Inicializovat</a>
+        <a id="init-room" class="button" href="/room/${roomId}/init">Inicializovat</a>
         <p class="disclaimer">A získat titul inicializátora</p>
       `;
       document.querySelector("header").classList.remove("hidden")
-      postForm.setAttribute('aria-hidden', false);
+      document.querySelector("header").setAttribute('aria-hidden', false);
+      document.querySelector('#init-room').addEventListener('click', event => {
+        if (!isCurrentUserVerified()) {
+          event.preventDefault();
+          alert('Pro inicializaci místnosti musíte být ověřený.');
+          window.location.href = `/verify-self/?destination=${encodeURIComponent(event.target.href)}`;
+        }
+      })
     } else {
       const postForm = document.querySelector("#post");
       postForm.classList.remove("hidden");

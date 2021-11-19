@@ -85,7 +85,7 @@
       event.preventDefault();
       button.setAttribute("disabled", true);
 
-      if (await isCurrentUserVerified() === false) {
+      if (isCurrentUserVerified() === false) {
         alert("Nemáte ověřený účet, zkontrolujte svůj email.");
         window.location.href = `/verify-self?destination=${encodeURIComponent('/room/create')}`;
         return;

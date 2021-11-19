@@ -29,7 +29,7 @@ onAuthStateChanged(auth, (user) => {
  * Use only in async handlers, this tooks a while to load
  * @returns {Promise<void>}
  */
-export async function isCurrentUserVerified() {
+export function isCurrentUserVerified() {
   return Boolean(currentUser && currentUser.emailVerified);
 }
 
