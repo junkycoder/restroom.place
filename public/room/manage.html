@@ -115,6 +115,7 @@
       const pictureElement = document.createElement('img');
       pictureElement.src = profile.picture;
       pictureElement.classList.add('profile-picture');
+      pictureElement.classList.add('profile-picture--small');
       document.querySelector('.profile-picture-upload-file').prepend(pictureElement);
     }
     if (profile) {
