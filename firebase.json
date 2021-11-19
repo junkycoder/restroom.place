@@ -20,12 +20,8 @@
         "destination": "/room/print.html"
       },
       {
-        "source": "/room/**/init",
-        "destination": "/room/init.html"
-      },
-      {
-        "source": "/room/**/edit",
-        "destination": "/room/edit.html"
+        "source": "/room/**/manage",
+        "destination": "/room/manage.html"
       },
       {
         "source": "/room/**",

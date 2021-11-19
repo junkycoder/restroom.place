@@ -97,16 +97,17 @@
         <h1>Místnost zatím není inicializována.</h1>
       `;
       document.querySelector("main").innerHTML = `
-        <a id="init-room" class="button" href="/room/${roomId}/init">Inicializovat</a>
-        <p class="disclaimer">A získat titul inicializátora</p>
+        <a id="manage-room" class="button" href="/room/${roomId}/manage">Spravovat místnost</a>
+        <p class="disclaimer"></p>
       `;
       document.querySelector("header").classList.remove("hidden")
       document.querySelector("header").setAttribute('aria-hidden', false);
-      document.querySelector('#init-room').addEventListener('click', event => {
+      document.querySelector('#manage-room').addEventListener('click', event => {
         if (!isCurrentUserVerified()) {
           event.preventDefault();
-          alert('Pro inicializaci místnosti musíte být ověřený.');
-          window.location.href = `/verify-self/?destination=${encodeURIComponent(event.target.href)}`;
+          alert('Pro správu místnosti musíte být ověřený.');
+          const destination = encodeURIComponent((new URL(event.target.href)).pathname);
+          window.location.href = `/verify-self/?destination=${destination}`;
         }
       })
     } else {
@@ -124,9 +125,7 @@
     }
 
     document.querySelector('body header').addEventListener("click", () => {
-      if (profile.initialized) {
-        window.location.href = `/room/${roomId}/edit`;
-      }
+      window.location.href = `/room/${roomId}/manage`;
     });
 
 
