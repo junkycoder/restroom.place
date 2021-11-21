@@ -2,7 +2,7 @@ import { app } from "/application.js";
 import {
   getAuth,
   onAuthStateChanged,
-  signInAnonymously,
+  signInAnonymously as _signInAnonymously,
   sendSignInLinkToEmail,
   isSignInWithEmailLink,
   signInWithEmailLink,
@@ -12,17 +12,18 @@ import { isLocalhost } from "/library.js";
 
 export const auth = getAuth(app);
 
-export let currentUser = (window.currentUser = auth.currentUser);
+
+export let currentUser = auth.currentUser;
 
 if (isLocalhost()) {
   connectAuthEmulator(auth, "http://localhost:9099");
 }
 
-console.time("User load");
 onAuthStateChanged(auth, (user) => {
   console.info("Auth changed", user);
-  window.currentUser = currentUser = user;
-  console.timeEnd("User load");
+  currentUser = user;
+  const event = new CustomEvent("auth-changed", { detail: user });
+  document.dispatchEvent(event);
 });
 
 /**
@@ -89,4 +90,9 @@ export async function confirmMagicLink(link) {
   // result.additionalUserInfo.profile == null
   // You can check if the user is new or existing:
   // result.additionalUserInfo.isNewUser
+}
+
+export async function signInAnonymously() {
+  console.log("FDOK")
+  return _signInAnonymously(auth);
 }

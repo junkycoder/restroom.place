@@ -35,7 +35,6 @@ exports.generateRoom = functions.https.onCall(async ({ roomId }, context) => {
 
   return db.runTransaction(async (transaction) => {
     const doc = await transaction.get(ref);
-    const profileDoc = await transaction.get(profileRef);
 
     if (doc.exists) {
       throw new functions.https.HttpsError(

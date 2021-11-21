@@ -6,4 +6,5 @@ admin.initializeApp();
 module.exports = {
   ...require("./generateRoom"),
   ...require("./updateRoom"),
+  ...require("./createPost"),
 };

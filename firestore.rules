@@ -13,6 +13,9 @@ service cloud.firestore {
       allow get: if true; // public but readonly
       allow read, update: if isCreator();
     }
+    match /rooms/{roomId}/posts/{post=**} {
+      allow read: if true;
+    }
   }
 }
 

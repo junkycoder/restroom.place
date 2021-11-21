@@ -1,5 +1,4 @@
-/**
- */
+/* */
 
 import { hasTouchScreen } from "./library.js";
 
@@ -12,17 +11,27 @@ const checkTouchScreen = () => {
 setTimeout(checkTouchScreen, 0);
 window.document.addEventListener("DOMContentLoaded", checkTouchScreen);
 
+
+/* */
+
 import {
   isMagicLink,
   confirmMagicLink,
   isCurrentUserVerified,
+  signInAnonymously,
 } from "/authentication.js";
 
-document.addEventListener("DOMContentLoaded", async () => {
+
+document.addEventListener("auth-changed", async ({ detail: user }) => {
+  if (isCurrentUserVerified()) return;
+
   try {
     if (isMagicLink()) {
       await confirmMagicLink();
       window.location.search = "";
+    } else if (!user) {
+      console.log("dok");
+      await signInAnonymously();
     }
   } catch (error) {
     console.error(error);

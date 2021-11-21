@@ -38,6 +38,20 @@
       font-size: 14px;
     }
 
+    article {
+      padding: 8px 0;
+      border-top: 1px solid #eee;
+      line-height: 1.2;
+    }
+
+    article:last-child {
+      border-bottom: 1px solid #eee;
+    }
+
+    article pre {
+      white-space: pre-wrap;
+    }
+
     aside {
       width: 100%;
       margin-bottom: 12px;
@@ -81,7 +95,7 @@
   </main>
   <aside>
     <form method="POST" id="post" class="hidden" aria-hidden="true">
-      <textarea placeholder="Vaše zpráva?" required></textarea>
+      <textarea placeholder="Vaše zpráva?" required name="text"></textarea>
       <div>
         <button type="submit">Odeslat</button>
         <p class="disclaimer">anonymně</p>
@@ -90,14 +104,37 @@
   </aside>
   <script type="module">
     import { parseRoomIdFromUrl } from "/library.js";
-    import { getDocData } from "/firestore.js"
+    import { getDocData, getCollectionData } from "/firestore.js"
     import { isCurrentUserVerified } from "/authentication.js";
     import { getRoomProfilePictureUrl } from "/storage.js";
+    import { createPost } from "/functions.js";
 
     const roomId = parseRoomIdFromUrl();
     if (!roomId) window.location.href = "/";
 
     const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error);
+    const postForm = document.querySelector("#post");
+    const postSubmitButton = postForm.querySelector('button[type="submit"]');
+
+    postForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      postSubmitButton.setAttribute('disabled', true);
+      const formData = new FormData(event.target);
+
+      try {
+        await createPost({
+          roomId,
+          text: formData.get('text'),
+        });
+
+        window.location.href = `/room/${roomId}`;
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+      } finally {
+        postSubmitButton.removeAttribute('disabled');
+      }
+    });
 
     if (!profile) {
       alert("Místnost neexistuje, ale můžete ji vytvořit.")
@@ -123,7 +160,6 @@
         }
       })
     } else {
-      const postForm = document.querySelector("#post");
       postForm.classList.remove("hidden");
       postForm.setAttribute('aria-hidden', false);
     }
@@ -142,8 +178,7 @@
     });
 
 
-    // const posts = await getDocData(`rooms/${roomId}/public/posts`).catch(console.error) || [];
-    const posts = [];
+    const posts = await getCollectionData(`rooms/${roomId}/posts`).catch(console.error) || [];
 
     if (profile.initialized && !posts.length) {
       document.querySelector("main").innerHTML = `
@@ -151,7 +186,14 @@
           <p>Zatím nejsou zde žádné příspěvky.</p>
         </article>
       `;
+    } else if (posts.length) {
+      document.querySelector("main").innerHTML = posts.map(post => `
+        <article>
+          <pre>${post.text}</pre>
+        </article>
+      `).join('');
     }
+
   </script>
 </body>
 
