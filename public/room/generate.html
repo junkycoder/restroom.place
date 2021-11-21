@@ -72,7 +72,8 @@
         return;
       }
 
-      const roomId = event.target.identificator.value || Date.now();
+      const roomIdValue = event.target.identificator.value || Date.now();
+      const roomId = roomIdValue.toString().replace(/[^a-z0-9]/gi, '_').toLowerCase();
 
       try {
         const { data: qrImage } = await generateRoom({ roomId });
@@ -93,7 +94,6 @@
 
     });
   </script>
-
 </body>
 
 </html>
