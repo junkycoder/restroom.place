@@ -95,6 +95,8 @@
     import { getRoomProfilePictureUrl } from "/storage.js";
 
     const roomId = parseRoomIdFromUrl();
+    if (!roomId) window.location.href = "/";
+
     const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error);
 
     if (!profile) {
