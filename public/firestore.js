@@ -26,7 +26,7 @@ export async function getDocData(path) {
 }
 
 export async function getCollectionData(path) {
-  const q = query(collection(db, path), orderBy("createdAt", "desc"));
+  const q = query(collection(db, path), orderBy("createdAt", "asc"));
   const snap = await getDocs(q);
   return snap.docs.map((doc) => doc.data());
 }

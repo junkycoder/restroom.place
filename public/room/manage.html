@@ -100,33 +100,35 @@
       }
     });
 
-    const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error);
+    document.addEventListener("auth-changed", async () => {
+      const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error);
 
-    if (!profile) {
-      alert("Tato místnost neexistuje. Můžete si ji ale vytvořit.")
-      window.location.href = `/room/generate?roomId=${roomId}`
-    }
+      if (!profile) {
+        alert("Tato místnost neexistuje. Můžete si ji ale vytvořit.")
+        window.location.href = `/room/generate?roomId=${roomId}`
+      }
 
-    if (profile?.initialized) {
-      document.querySelector('input[name="sticked"]').checked = true;
-      document.querySelector('textarea[name="bio"]').innterText = profile.bio;
-    }
+      if (profile?.initialized) {
+        document.querySelector('input[name="sticked"]').checked = true;
+        document.querySelector('textarea[name="bio"]').innterText = profile.bio;
+      }
 
-    const pictureUrl = await getRoomProfilePictureUrl(roomId);
+      const pictureUrl = await getRoomProfilePictureUrl(roomId);
 
-    if (pictureUrl) {
-      const pictureElement = document.createElement('img');
-      pictureElement.classList.add('profile-picture');
-      pictureElement.classList.add('profile-picture--small');
-      pictureElement.src = pictureUrl;
-      document.querySelector('.profile-picture-upload-file').prepend(pictureElement);
-      document.querySelector('input[name="picture"]').required = false;
-    }
-    if (profile) {
-      document.querySelector('input[name="name"]').value = profile.name || '';
-      document.querySelector('textarea[name="bio"]').innerText = profile.bio || '';
-    }
+      if (pictureUrl) {
+        const pictureElement = document.createElement('img');
+        pictureElement.classList.add('profile-picture');
+        pictureElement.classList.add('profile-picture--small');
+        pictureElement.src = pictureUrl;
+        document.querySelector('.profile-picture-upload-file').prepend(pictureElement);
+        document.querySelector('input[name="picture"]').required = false;
+      }
 
+      if (profile) {
+        document.querySelector('input[name="name"]').value = profile.name || '';
+        document.querySelector('textarea[name="bio"]').innerText = profile.bio || '';
+      }
+    });
   </script>
 </body>
 

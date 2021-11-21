@@ -20,7 +20,6 @@ if (isLocalhost()) {
 }
 
 onAuthStateChanged(auth, (user) => {
-  console.info("Auth changed", user);
   currentUser = user;
   const event = new CustomEvent("auth-changed", { detail: user });
   document.dispatchEvent(event);

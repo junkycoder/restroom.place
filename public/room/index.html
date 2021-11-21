@@ -42,6 +42,7 @@
       padding: 8px 0;
       border-top: 1px solid #eee;
       line-height: 1.2;
+      font-size: 14px;
     }
 
     article:last-child {
@@ -112,7 +113,6 @@
     const roomId = parseRoomIdFromUrl();
     if (!roomId) window.location.href = "/";
 
-    const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error);
     const postForm = document.querySelector("#post");
     const postSubmitButton = postForm.querySelector('button[type="submit"]');
 
@@ -136,64 +136,66 @@
       }
     });
 
-    if (!profile) {
-      alert("Místnost neexistuje, ale můžete ji vytvořit.")
-      window.location.href = roomId ? '/room/generate' : `/room/generate?roomId=${roomId}`;
-    }
+    document.addEventListener("auth-changed", async () => {
+      const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error);
+      if (!profile) {
+        alert("Místnost neexistuje, ale můžete ji vytvořit.")
+        window.location.href = roomId ? '/room/generate' : `/room/generate?roomId=${roomId}`;
+      }
 
-    if (!profile.initialized) {
-      document.querySelector("header").innerHTML = `
-        <h1>Místnost zatím není inicializována.</h1>
-      `;
-      document.querySelector("main").innerHTML = `
-        <a id="manage-room" class="button" href="/room/${roomId}/manage">Spravovat místnost</a>
-        <p class="disclaimer">Získáte moc nad tímto místem.</p>
-      `;
-      document.querySelector("header").classList.remove("hidden")
-      document.querySelector("header").setAttribute('aria-hidden', false);
-      document.querySelector('#manage-room').addEventListener('click', event => {
-        if (!isCurrentUserVerified()) {
-          event.preventDefault();
-          alert('Pro správu místnosti musíte být ověřený.');
-          const destination = encodeURIComponent((new URL(event.target.href)).pathname);
-          window.location.href = `/verify-self/?destination=${destination}`;
-        }
-      })
-    } else {
-      postForm.classList.remove("hidden");
-      postForm.setAttribute('aria-hidden', false);
-    }
+      if (!profile.initialized) {
+        document.querySelector("header").innerHTML = `
+          <h1>Místnost zatím není inicializována.</h1>
+        `;
+        document.querySelector("main").innerHTML = `
+          <a id="manage-room" class="button" href="/room/${roomId}/manage">Spravovat místnost</a>
+          <p class="disclaimer">Získáte moc nad tímto místem.</p>
+        `;
+        document.querySelector("header").classList.remove("hidden")
+        document.querySelector("header").setAttribute('aria-hidden', false);
+        document.querySelector('#manage-room').addEventListener('click', event => {
+          if (!isCurrentUserVerified()) {
+            event.preventDefault();
+            alert('Pro správu místnosti musíte být ověřený.');
+            const destination = encodeURIComponent((new URL(event.target.href)).pathname);
+            window.location.href = `/verify-self/?destination=${destination}`;
+          }
+        })
+      } else {
+        postForm.classList.remove("hidden");
+        postForm.setAttribute('aria-hidden', false);
+      }
 
-    if (profile.initialized) {
-      document.querySelector("header h1").innerText = profile.name || '';
-      document.querySelector("header p").innerText = profile.bio || '';
-      document.querySelector("header img").src = await getRoomProfilePictureUrl(roomId);
+      if (profile.initialized) {
+        document.querySelector("header h1").innerText = profile.name || '';
+        document.querySelector("header p").innerText = profile.bio || '';
+        document.querySelector("header img").src = await getRoomProfilePictureUrl(roomId);
 
-      document.querySelector("header").classList.remove("hidden")
-      document.querySelector("header").setAttribute('aria-hidden', false);
-    }
+        document.querySelector("header").classList.remove("hidden")
+        document.querySelector("header").setAttribute('aria-hidden', false);
+      }
 
-    document.querySelector('body header').addEventListener("click", () => {
-      window.location.href = `/room/${roomId}/manage`;
+      document.querySelector('body header').addEventListener("click", () => {
+        window.location.href = `/room/${roomId}/manage`;
+      });
+
+
+      const posts = await getCollectionData(`rooms/${roomId}/posts`).catch(console.error) || [];
+
+      if (profile.initialized && !posts.length) {
+        document.querySelector("main").innerHTML = `
+          <article class="placeholder">
+            <p>Zatím nejsou zde žádné příspěvky.</p>
+          </article>
+        `;
+      } else if (posts.length) {
+        document.querySelector("main").innerHTML = posts.map(post => `
+          <article>
+            <pre>${post.text}</pre>
+          </article>
+        `).join('');
+      }
     });
-
-
-    const posts = await getCollectionData(`rooms/${roomId}/posts`).catch(console.error) || [];
-
-    if (profile.initialized && !posts.length) {
-      document.querySelector("main").innerHTML = `
-        <article class="placeholder">
-          <p>Zatím nejsou zde žádné příspěvky.</p>
-        </article>
-      `;
-    } else if (posts.length) {
-      document.querySelector("main").innerHTML = posts.map(post => `
-        <article>
-          <pre>${post.text}</pre>
-        </article>
-      `).join('');
-    }
-
   </script>
 </body>
 

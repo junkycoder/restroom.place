@@ -3,3 +3,4 @@ tmp/
 *.tmp.*
 firebase-adminsdk.json
 *-debug.log
+.firebase/

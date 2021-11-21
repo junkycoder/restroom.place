@@ -40,6 +40,7 @@
     main {
       flex: 1;
     }
+
     footer {
       padding-bottom: 32px;
     }
@@ -70,21 +71,23 @@
       <span id="room-id"></span>
       <script type="module">
         import { parseRoomIdFromUrl } from "/library.js";
-        import { getDocData } from "/firestore.js"
+        import { getDocData } from "/firestore.js";
 
-        const roomId = parseRoomIdFromUrl();
-        const { qr } = await getDocData(`rooms/${roomId}`).catch(console.error) || {};
+        document.addEventListener("auth-changed", async () => {
+          const roomId = parseRoomIdFromUrl();
+          const { qr } = await getDocData(`rooms/${roomId}`).catch(console.error) || {};
 
-        if (!qr) {
-          if (window.confirm("Nemáte nálepku. Chcete ji vytvořit?")) {
-            window.location.href = `/room/generate`;
+          if (!qr) {
+            if (window.confirm("Nemáte nálepku. Chcete ji vytvořit?")) {
+              window.location.href = `/room/generate`;
+            } else {
+              window.close();
+            }
           } else {
-            window.close();
+            document.querySelector('img#qr').src = qr
+            document.querySelector('#room-id').innerText = roomId;
           }
-        } else {
-          document.querySelector('img#qr').src = qr
-          document.querySelector('#room-id').innerText = roomId;
-        }
+        });
       </script>
     </div>
   </main>
