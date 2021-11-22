@@ -153,7 +153,7 @@
         `;
         document.querySelector("header").classList.remove("hidden")
         document.querySelector("header").setAttribute('aria-hidden', false);
-        document.querySelector('#manage-room').addEventListener('click', event => {
+        document.querySelector('#manage-room').addEventListener('long-press', event => {
           if (!isCurrentUserVerified()) {
             event.preventDefault();
             alert('Pro správu místnosti musíte být ověřený.');
