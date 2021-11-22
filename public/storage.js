@@ -5,7 +5,7 @@ import {
   uploadBytes,
   connectStorageEmulator,
   getDownloadURL,
-} from "https://www.gstatic.com/firebasejs/9.4.1/firebase-storage.js";
+} from "https://www.gstatic.com/firebasejs/9.5.0/firebase-storage.js";
 import { isLocalhost } from "/library.js";
 
 export const storage = getStorage();

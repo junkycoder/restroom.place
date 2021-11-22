@@ -8,7 +8,7 @@ import {
   getDoc,
   query,
   orderBy,
-} from "https://www.gstatic.com/firebasejs/9.4.1/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/9.5.0/firebase-firestore.js";
 import { isLocalhost } from "/library.js";
 import "/authentication.js";
 

@@ -3,7 +3,7 @@ import {
   getFunctions,
   httpsCallable,
   connectFunctionsEmulator,
-} from "https://www.gstatic.com/firebasejs/9.4.1/firebase-functions.js";
+} from "https://www.gstatic.com/firebasejs/9.5.0/firebase-functions.js";
 import { isLocalhost } from "/library.js";
 
 export const functions = getFunctions(app);

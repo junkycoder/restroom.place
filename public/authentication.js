@@ -7,7 +7,7 @@ import {
   isSignInWithEmailLink,
   signInWithEmailLink,
   connectAuthEmulator,
-} from "https://www.gstatic.com/firebasejs/9.4.1/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/9.5.0/firebase-auth.js";
 import { isLocalhost } from "/library.js";
 
 export const auth = getAuth(app);
