@@ -1,25 +1,31 @@
 # Restroom Place
-Místo, kde anonymně zanecháte vzkaz pro ostatni spolusráče.
+Místo, kde anonymně zanecháte vzkaz pro ostatní spolusráče. Pseudo sociální síť,
+kde své veřejné profily mají reálná místa, ale její uživatelé jsou anonymní.
 
 * [wireframes](https://app.excalidraw.com/l/3morKKwsyGZ/9wcWz7uzmqn)
 ## Development
-```bash
+Celý to běží na **Firebase**.
 
+```bash
+npm i -g firebase-tools
+firebase emulators:start
+open localhost:5000
 ```
 ### Frontend
 Vše co najdete ve složce `public/`. 
 
 Pravidla jednoduchosti jsou:
 * **Nepoužívá** NPM, ale import ESM modulu z CDN.
-* **Nepoužívá** bundler, Fe se nemusí buildit.
+* **Nepoužívá** bundler, ale prostě moduly.
+* Pure **HTML**, **JavaScript**, **CSS** a klasické assety.
+* **Není** SPA, ale [routing řeší hosting](./firebase.json).
+* **Nejsou** stejže (prod, dev, test), pouze lokální emulace.
 
-1. `npm install -g firebase-tools` + `firebase login`
-2. firebase emulators:start
-3. open localhost:5000
-4. develop 
-
-* FE = `public/`, `firebase.json`
-* BE = `functions/`, `firebase.rules`, `storage.rules`
-
+### Backend
+Složenej z [cloud funkcí](./functions), [firestore](./firestore.rules) a [storage](./storage.rules).
 ## Deployment
-Hosting automaticky pri push, backend funkce pomoci `firebase deploy --only functions` - musíš ale mít Node 14.
+```bash
+git commit
+git pull
+git push
+```
