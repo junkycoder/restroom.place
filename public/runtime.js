@@ -39,7 +39,7 @@ document.addEventListener("auth-changed", async ({ detail: user }) => {
     if (error.code === "auth/invalid-action-code") {
       alert("Neplatný odkaz, zkuste to znovu.");
 
-      window.location.href = `/verify-self?destination=${encodeURIComponent(
+      window.location.href = `/user/verify-self?destination=${encodeURIComponent(
         wiondow.location.pathname
       )}`;
     } else {

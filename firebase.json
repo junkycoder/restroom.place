@@ -10,6 +10,7 @@
     "public": "public",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "trailingSlash": false,
+    "cleanUrls": true,
     "rewrites": [
       {
         "source": "/room/generate",

@@ -68,7 +68,7 @@
       if (isCurrentUserVerified() === false) {
         alert("Nemáte ověřený účet, zkontrolujte svůj email.");
         const currentUri = window.location.pathname + window.location.search;
-        window.location.href = `/verify-self?destination=${encodeURIComponent(currentUri)}`;
+        window.location.href = `/user/verify-self?destination=${encodeURIComponent(currentUri)}`;
         return;
       }
 

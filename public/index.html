@@ -51,7 +51,7 @@
       if (isCurrentUserVerified()) {
         window.location.href = '/room/generate';
       } else {
-        window.location.href = `/verify-self?destination=${encodeURIComponent('/room/generate')}`;
+        window.location.href = `/user/verify-self?destination=${encodeURIComponent('/room/generate')}`;
       }
     });
   </script>

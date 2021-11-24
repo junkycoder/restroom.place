@@ -158,7 +158,7 @@
             event.preventDefault();
             alert('Pro správu místnosti musíte být ověřený.');
             const destination = encodeURIComponent((new URL(event.target.href)).pathname);
-            window.location.href = `/verify-self/?destination=${destination}`;
+            window.location.href = `/user/verify-self/?destination=${destination}`;
           }
         })
       } else {
