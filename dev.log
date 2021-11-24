@@ -1,0 +1,30 @@
+
+- [x] Firebase inicializovaná.
+
+- [x] Hosting inicializovaný.
+
+- [x] Firebase na klientu inicializovaný.
+
+- [x] Struktura obrazovek podle [wireframes](https://app.excalidraw.com/l/3morKKwsyGZ/9wcWz7uzmqn) nahozena.
+
+- [x] Firebase signInWithEmailLink
+
+- [x] Emulatory vseho nahozeny
+
+- [x] Generate and QR code sticker
+
+- [x] Inicialize room
+
+- [x] Room public profile
+
+- [x] Manage room
+
+- [x] Post to the room anonymously
+
+- [ ] Delete post if creator, initializator or author
+
+- [ ] Anonymous profile of verified user
+
+- [ ] Upgrade Anonynous > Verified user
+
+- [ ] Should be Post more than text?
