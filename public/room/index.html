@@ -89,7 +89,7 @@
     <h1></h1>
     <div>
       <img class="profile-picture" src="#" title="Profile picture" height="100">
-      <p></p>
+      <div id="bio"></div>
     </div>
   </header>
   <main>
@@ -168,7 +168,9 @@
 
       if (profile.initialized) {
         document.querySelector("header h1").innerText = profile.name || '';
-        document.querySelector("header p").innerText = profile.bio || '';
+
+        document.querySelector("#bio")[profile.html ? 'innerHTML' : 'innerText'] = profile.html || profile.bio || '';
+
         document.querySelector("header img").src = await getRoomProfilePictureUrl(roomId);
 
         document.querySelector("header").classList.remove("hidden")
@@ -189,11 +191,17 @@
           </article>
         `;
       } else if (posts.length) {
-        document.querySelector("main").innerHTML = posts.map(post => `
+        document.querySelector("main").innerHTML = posts.map(renderPost).join('');
+      }
+
+      function renderPost(post) {
+        let markup = `<pre>${post.text}</pre>`
+        if (post.html) markup = post.html;
+        return `
           <article>
-            <pre>${post.text}</pre>
+            ${markup}
           </article>
-        `).join('');
+        `;
       }
     });
   </script>

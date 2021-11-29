@@ -1,5 +1,5 @@
 const functions = require("firebase-functions");
-const qrcode = require("qrcode");
+const marked = require("marked");
 const admin = require("firebase-admin");
 
 /**
@@ -38,6 +38,7 @@ exports.createPost = functions.https.onCall(
 
       await transaction.create(ref, {
         text,
+        html: marked.parse(text),
         createdAt,
       });
 

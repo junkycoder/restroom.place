@@ -1,5 +1,6 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const marked = require("marked");
 
 const PROCTION_DOMAIN = "restroom.place";
 
@@ -47,6 +48,7 @@ exports.updateRoom = functions.https.onCall(
       await transaction.update(profileRef, {
         name,
         bio,
+        html: marked.parse(bio),
         picture,
         initialized: true,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
