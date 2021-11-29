@@ -190,6 +190,7 @@
             <p>Zatím nejsou zde žádné příspěvky.</p>
           </article>
         `;
+
       } else if (posts.length) {
         document.querySelector("main").innerHTML = posts.map(renderPost).join('');
       }
@@ -198,7 +199,7 @@
         let markup = `<pre>${post.text}</pre>`
         if (post.html) markup = post.html;
         return `
-          <article>
+          <article data-post-id="${post.id}">
             ${markup}
           </article>
         `;
