@@ -46,3 +46,6 @@ document.addEventListener("auth-changed", async ({ detail: user }) => {
     }
   }
 });
+
+/*  */
+import "https://unpkg.com/long-press-event@2.4.4/src/long-press-event.js?module";
