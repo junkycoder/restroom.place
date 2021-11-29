@@ -11,8 +11,11 @@ const PROCTION_DOMAIN = "restroom.place";
 /**
  * Updates room's public profile
  */
-exports.updateRoom = functions.https.onCall(
-  async ({ roomId, bio, name, picture }, context) => {
+exports.updateRoom = functions
+  .runWith({
+    minInstances: 1,
+  })
+  .https.onCall(async ({ roomId, bio, name, picture }, context) => {
     if (!context.auth || !context.auth.token.email_verified) {
       throw new functions.https.HttpsError(
         "unauthenticated",
@@ -53,7 +56,5 @@ exports.updateRoom = functions.https.onCall(
         initialized: true,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
-
     });
-  }
-);
+  });

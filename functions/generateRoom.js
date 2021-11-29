@@ -17,44 +17,50 @@ function createRoomLink(roomId) {
 /**
  * Generates a QR code and a room wildcard.
  */
-exports.generateRoom = functions.https.onCall(async ({ roomId }, context) => {
-  const roomUrl = createRoomLink(roomId);
+exports.generateRoom = functions
+  .runWith({
+    minInstances: 1,
+  })
+  .https.onCall(async ({ roomId }, context) => {
+    const roomUrl = createRoomLink(roomId);
 
-  if (!context.auth || !context.auth.token.email_verified) {
-    throw new functions.https.HttpsError(
-      "unauthenticated",
-      "The function must be called while authenticated."
-    );
-  }
-
-  const db = admin.firestore();
-  const ref = db.doc(`rooms/${roomId}`);
-  const profileRef = db.doc(`rooms/${roomId}/public/profile`);
-  const qr = await qrcode.toDataURL(roomUrl, { rendererOpts: { quality: 1 } });
-
-  return db.runTransaction(async (transaction) => {
-    const doc = await transaction.get(ref);
-
-    if (doc.exists) {
+    if (!context.auth || !context.auth.token.email_verified) {
       throw new functions.https.HttpsError(
-        "already-exists",
-        "The room already exists."
+        "unauthenticated",
+        "The function must be called while authenticated."
       );
     }
 
-    await transaction.create(ref, {
-      id: roomId,
-      qr,
-      creatorId: context.auth.uid,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    const db = admin.firestore();
+    const ref = db.doc(`rooms/${roomId}`);
+    const profileRef = db.doc(`rooms/${roomId}/public/profile`);
+    const qr = await qrcode.toDataURL(roomUrl, {
+      rendererOpts: { quality: 1 },
     });
 
-    await transaction.create(profileRef, {
-      roomId,
-      initialized: false,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
+    return db.runTransaction(async (transaction) => {
+      const doc = await transaction.get(ref);
 
-    return qr;
+      if (doc.exists) {
+        throw new functions.https.HttpsError(
+          "already-exists",
+          "The room already exists."
+        );
+      }
+
+      await transaction.create(ref, {
+        id: roomId,
+        qr,
+        creatorId: context.auth.uid,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      await transaction.create(profileRef, {
+        roomId,
+        initialized: false,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      return qr;
+    });
   });
-});
