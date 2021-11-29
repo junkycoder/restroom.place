@@ -30,7 +30,6 @@ document.addEventListener("auth-changed", async ({ detail: user }) => {
       await confirmMagicLink();
       window.location.search = "";
     } else if (!user) {
-      console.log("dok");
       await signInAnonymously();
     }
   } catch (error) {

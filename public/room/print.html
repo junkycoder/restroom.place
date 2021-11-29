@@ -13,27 +13,37 @@
       margin: 0;
     }
 
+    header {
+      width: 100%;
+      padding-bottom: 24px;
+      border-bottom: 2px dashed #ccc;
+    }
+    footer {
+      width: 100%;
+      padding-top: 24px;
+      border-top: 2px dashed #ccc;
+    }
+
     .room-sticker {
-      width: 120pt;
-      height: 150pt;
-      border: 1pt solid var(--color-primary);
-      box-sizing: border-box;
+      --size: 150pt;
+      --font-size: 18pt;
+      box-sizing: content-box;
     }
 
     .room-sticker img {
-      width: 150px;
-      height: 150px;
+      width: var(--size);
+      height: var(--size);
+      border: 1pt solid var(--color-primary);
       z-index: 1;
     }
 
     .room-sticker h2 {
-      font-size: 11pt;
-      margin: 0;
-      padding: 0;
+      font-size: var(--font-size);
     }
 
     .room-sticker span {
-      font-size: 8pt;
+      font-size: calc(var(--font-size) * 0.8);
+      line-height: 2;
     }
   </style>
   <style media="screen">
@@ -51,11 +61,19 @@
       display: none !important;
     }
 
-    body,
-    main {
-      align-items: flex-start !important;
-      justify-content: flex-start !important;
+    .room-sticker {
+      --size: 200pt;
     }
+
+    /*
+     * Align wr code to the top left corner of the page
+
+      body,
+      main {
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+      }
+     */
   </style>
 </head>
 
@@ -66,8 +84,8 @@
   </header>
   <main class="center-flex">
     <div class="room-sticker center-flex">
-      <h2>Napiš něco na zeď</h2>
-      <img src="" alt="QR" id="qr">
+      <h2>restroom.place</h2>
+      <img class="hidden" src="" alt="QR" id="qr">
       <span id="room-id"></span>
       <script type="module">
         import { parseRoomIdFromUrl } from "/library.js";
@@ -84,7 +102,9 @@
               window.close();
             }
           } else {
-            document.querySelector('img#qr').src = qr
+            const imgElm = document.querySelector('img#qr');
+            imgElm.src = qr;
+            imgElm.classList.remove("hidden");
             document.querySelector('#room-id').innerText = roomId;
           }
         });

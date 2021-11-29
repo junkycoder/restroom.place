@@ -2,7 +2,6 @@ const functions = require("firebase-functions");
 const qrcode = require("qrcode");
 const admin = require("firebase-admin");
 
-
 const PROCTION_DOMAIN = "restroom.place";
 
 function isEmulation() {
@@ -31,7 +30,7 @@ exports.generateRoom = functions.https.onCall(async ({ roomId }, context) => {
   const db = admin.firestore();
   const ref = db.doc(`rooms/${roomId}`);
   const profileRef = db.doc(`rooms/${roomId}/public/profile`);
-  const qr = await qrcode.toDataURL(roomUrl);
+  const qr = await qrcode.toDataURL(roomUrl, { rendererOpts: { quality: 1 } });
 
   return db.runTransaction(async (transaction) => {
     const doc = await transaction.get(ref);

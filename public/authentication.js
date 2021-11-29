@@ -92,6 +92,5 @@ export async function confirmMagicLink(link) {
 }
 
 export async function signInAnonymously() {
-  console.log("FDOK")
   return _signInAnonymously(auth);
 }
