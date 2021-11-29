@@ -18,6 +18,7 @@
       padding-bottom: 24px;
       border-bottom: 2px dashed #ccc;
     }
+
     footer {
       width: 100%;
       padding-top: 24px;
@@ -85,6 +86,11 @@
   <main class="center-flex">
     <div class="room-sticker center-flex">
       <h2>restroom.place</h2>
+      <script type="module">
+        document.querySelector('.room-sticker h2').addEventListener('click', (event) => {
+          event.target.innerText = window.prompt("Zadejte název místa", 'restroom.place');
+        });
+      </script>
       <img class="hidden" src="" alt="QR" id="qr">
       <span id="room-id"></span>
       <script type="module">
