@@ -116,6 +116,8 @@
 
       const formData = new FormData(event.target);
 
+      debugger;
+
       try {
         const file = formData.get('picture');
         if (file) await uploadProfilePicture({ roomId, file });
