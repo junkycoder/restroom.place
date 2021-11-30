@@ -128,6 +128,7 @@
         });
         document.querySelector('main').insertAdjacentHTML('beforeend', renderPost(newPost));
         postForm.reset();
+        document.querySelector('main article.placeholder')?.remove();
       } catch (error) {
         console.error(error);
         alert(error.message);
