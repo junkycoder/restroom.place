@@ -1,18 +1,18 @@
-/* */
+/* Force mobile view */
 
 import { hasTouchScreen } from "./library.js";
 
 const checkTouchScreen = () => {
   if (!hasTouchScreen()) {
     document.body.classList.add("no-touch");
-    document.body.innerText = "This app is not supported on your device.";
+    document.body.classList.add("mobile-viewport");
   }
 };
 setTimeout(checkTouchScreen, 0);
 window.document.addEventListener("DOMContentLoaded", checkTouchScreen);
 
 
-/* */
+/* Authenticate */
 
 import {
   isMagicLink,
@@ -47,5 +47,5 @@ document.addEventListener("auth-changed", async ({ detail: user }) => {
   }
 });
 
-/*  */
+/* Polify */
 import "https://unpkg.com/long-press-event@2.4.4/src/long-press-event.js?module";

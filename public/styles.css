@@ -1,6 +1,7 @@
 
 :root {
   --color-primary: #000;
+  --color-secondary: #ccc;
 }
 
 
@@ -14,11 +15,17 @@ body {
   font-size: 16px;
 }
 
-body.no-touch {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+body.mobile-viewport {
+  max-width: 360px;
+  margin: 24px auto;
+  border: 1px solid var(--color-secondary);
+  padding: 0 12px;
+}
+@media print {
+  body.mobile-viewport {
+    border: none;
+    padding: 0;
+  }
 }
 
 header p {
@@ -29,6 +36,7 @@ header p {
 header h1, main > h2 {
   text-align: center;
 }
+
 
 .disclaimer {
   text-align: center;
