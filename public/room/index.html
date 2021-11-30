@@ -200,9 +200,9 @@
     }
 
     function renderPost(post) {
-      let markup = post.text;
+      if (!post.text && !post.html) return '';
+      let markup = `<p>${post.text}</p>`;
       if (post.html) markup = post.html;
-      if (!markup) return '';
       return `
         <article data-post-id="${post.id}">
           ${markup}
