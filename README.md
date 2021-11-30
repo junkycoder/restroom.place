@@ -20,6 +20,7 @@ Pravidla jednoduchosti jsou:
 * Pure **HTML**, **JavaScript**, **CSS** a klasické assety.
 * **Není** SPA, ale [routing řeší hosting](./firebase.json).
 * **Nejsou** stejže (prod, dev, test), pouze lokální emulace.
+* Není to PWA/fullscreen, využívá navigační prvky prohlížeče
 
 ### Backend
 Složenej z [cloud funkcí](./functions), [firestore](./firestore.rules) a [storage](./storage.rules).
