@@ -54,15 +54,25 @@
     import { isCurrentUserVerified } from "/authentication.js";
     import { generateRoom } from "/functions.js";
 
-    const button = document.querySelector('#generate button[type="submit"]');
-
-    const autoCompleteRoomUrl = new URLSearchParams(location.search).get("roomId");
-    if (autoCompleteRoomUrl) {
-      document.querySelector('input[name="identificator"]').value = autoCompleteRoomUrl;
+    // Prefill room identificator if any in url params.
+    try {
+      const autoCompleteRoomUrl = new URLSearchParams(location.search).get("roomId");
+      if (autoCompleteRoomUrl) {
+        document.querySelector('input[name="identificator"]').value = autoCompleteRoomUrl;
+      }
+    } catch (O_q) {
+      console.error(O_q);
     }
 
-    document.querySelector('form#generate')?.addEventListener('submit', async (event) => {
+
+    document.querySelector('form#generate').addEventListener('submit', handleFormSubmit);
+
+    document.addEventListener("user-verified", console.log);
+
+    async function handleFormSubmit(event) {
       event.preventDefault();
+
+      const button = document.querySelector('#generate button[type="submit"]');
       button.setAttribute("disabled", true);
 
       if (isCurrentUserVerified() === false) {
@@ -91,8 +101,7 @@
       } finally {
         button.removeAttribute("disabled");
       }
-
-    });
+    }
   </script>
 </body>
 

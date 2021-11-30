@@ -11,39 +11,20 @@ const checkTouchScreen = () => {
 setTimeout(checkTouchScreen, 0);
 window.document.addEventListener("DOMContentLoaded", checkTouchScreen);
 
+/* Authentication error propagation */
+import "/authentication.js";
 
-/* Authenticate */
+document.addEventListener("user-error", async ({ detail: error }) => {
+  console.error(error);
 
-import {
-  isMagicLink,
-  confirmMagicLink,
-  isCurrentUserVerified,
-  signInAnonymously,
-} from "/authentication.js";
+  if (error.code === "auth/invalid-action-code") {
+    alert("Neplatný odkaz, zkuste to znovu.");
 
-
-document.addEventListener("auth-changed", async ({ detail: user }) => {
-  if (isCurrentUserVerified()) return;
-
-  try {
-    if (isMagicLink()) {
-      await confirmMagicLink();
-      window.location.search = "";
-    } else if (!user) {
-      await signInAnonymously();
-    }
-  } catch (error) {
-    console.error(error);
-
-    if (error.code === "auth/invalid-action-code") {
-      alert("Neplatný odkaz, zkuste to znovu.");
-
-      window.location.href = `/user/verify-self?destination=${encodeURIComponent(
-        wiondow.location.pathname
-      )}`;
-    } else {
-      alert("Nastala chyba.");
-    }
+    window.location.href = `/user/verify-self?destination=${encodeURIComponent(
+      window.location.pathname
+    )}`;
+  } else {
+    alert("Nastala chyba.");
   }
 });
 

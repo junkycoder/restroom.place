@@ -9,9 +9,10 @@
   <link media="screen" rel="stylesheet" href="/styles.css">
   <script type="module" src="/runtime.js"></script>
   <style media="screen">
-    form > div {
+    form>div {
       margin: 32px 16px;
     }
+
     form label {
       display: block;
     }
@@ -39,8 +40,8 @@
           <span>Chápu <a href="/conditions.html">podmínky</a> a souhlasím s nimi</span>
         </label>
       </div>
-        <button type="submit">Odeslat</button>
-        <p class="disclaimer">Po odeslání vám na e-mail dorazí přihlašovací odkaz.</p>
+      <button type="submit">Odeslat</button>
+      <p class="disclaimer">Po odeslání vám na e-mail dorazí přihlašovací odkaz.</p>
     </form>
   </main>
   <script type="module">
@@ -51,30 +52,33 @@
 
     try {
       form.querySelector('input[type="email"]').value = localStorage.getItem('emailForSignIn') || '';
-      form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        button.setAttribute("disabled", true);
-
-        const email = form.elements.email.value;
-        const terms = form.elements.terms.checked;
-        if (!terms) {
-          alert('Musíte souhlasit s podmínkami.');
-          return;
-        }
-        const destination = new URL(window.location.href).searchParams.get('destination');
-        await sendMagicLink({ email, destination });
-        document.querySelector('header').innerHTML = `
-          <h1>Otevřete si e-mail</h1>
-          <p>Na váš e-mail byl odeslán přihlašovací odkaz.</p>
-        `;
-        document.querySelector('main').innerHTML = '<p class="disclaimer">Toto okno můžete vklidu zavřít.</p>';
-
-      });
+      form.addEventListener('submit', handleFormSubmit);
     } catch (O_e) {
       console.error(O_e);
       alert('Odeslání přihlašovacího odkazu se nezdařilo.');
     } finally {
       button.removeAttribute("disabled");
+    }
+
+    async function handleFormSubmit(event) {
+      event.preventDefault();
+      button.setAttribute("disabled", true);
+
+      const email = form.elements.email.value;
+      const terms = form.elements.terms.checked;
+      if (!terms) {
+        alert('Musíte souhlasit s podmínkami.');
+        return;
+      }
+
+      const destination = new URL(window.location.href).searchParams.get('destination');
+      await sendMagicLink({ email, destination });
+
+      document.querySelector('header').innerHTML = `
+        <h1>Otevřete si e-mail</h1>
+        <p>Na váš e-mail byl odeslán přihlašovací odkaz.</p>
+      `;
+      document.querySelector('main').innerHTML = '<p class="disclaimer">Toto okno můžete vklidu zavřít.</p>';
     }
 
   </script>

@@ -2,7 +2,7 @@ import { app } from "/application.js";
 import {
   getAuth,
   onAuthStateChanged,
-  signInAnonymously as _signInAnonymously,
+  signInAnonymously,
   sendSignInLinkToEmail,
   isSignInWithEmailLink,
   signInWithEmailLink,
@@ -10,27 +10,50 @@ import {
 } from "https://www.gstatic.com/firebasejs/9.5.0/firebase-auth.js";
 import { isLocalhost } from "/library.js";
 
-export const auth = getAuth(app);
+export const auth = (window.auth = getAuth(app));
 
-
-export let currentUser = auth.currentUser;
+export const getCurrentUser = () => auth.currentUser;
 
 if (isLocalhost()) {
   connectAuthEmulator(auth, "http://localhost:9099");
 }
 
-onAuthStateChanged(auth, (user) => {
-  currentUser = user;
-  const event = new CustomEvent("auth-changed", { detail: user });
-  document.dispatchEvent(event);
+onAuthStateChanged(auth, async (user) => {
+  console.info("User state changed", user);
+
+  if (!user) {
+    await signInAnonymously(auth);
+    console.info("User signed anonymously");
+    return;
+  }
+
+  try {
+    if (!isCurrentUserVerified() && isMagicLink()) {
+      await confirmMagicLink();
+    }
+
+    const eventName = isCurrentUserVerified()
+      ? "user-verified"
+      : "user-anonymous";
+
+    event = new CustomEvent(eventName, { detail: user });
+  } catch (error) {
+    event = new CustomEvent("user-error", { detail: error });
+  } finally {
+    if (event) {
+      console.info("Dispatching event", event);
+      document.dispatchEvent(event);
+    }
+  }
 });
 
 /**
  * Use only in async handlers, this tooks a while to load
  * @returns {Promise<void>}
  */
-export function isCurrentUserVerified() {
-  return Boolean(currentUser && currentUser.emailVerified);
+export function isCurrentUserVerified(user) {
+  if (!user) user = getCurrentUser();
+  return Boolean(user && user.emailVerified);
 }
 
 export async function sendMagicLink({
@@ -49,6 +72,7 @@ export async function sendMagicLink({
     url,
     // This must be true.
     handleCodeInApp: true,
+    lang: "cs",
   };
 
   await sendSignInLinkToEmail(auth, email, settings);
@@ -56,7 +80,9 @@ export async function sendMagicLink({
 }
 
 export function isMagicLink(link) {
-  return isSignInWithEmailLink(auth, link || window.location.href);
+  if (!link) link = window.location.href;
+  console.info("Checking magic link", link);
+  return isSignInWithEmailLink(auth, link);
 }
 
 export async function confirmMagicLink(link) {
@@ -89,8 +115,4 @@ export async function confirmMagicLink(link) {
   // result.additionalUserInfo.profile == null
   // You can check if the user is new or existing:
   // result.additionalUserInfo.isNewUser
-}
-
-export async function signInAnonymously() {
-  return _signInAnonymously(auth);
 }

@@ -74,33 +74,12 @@
     import { uploadProfilePicture, getRoomProfilePictureUrl } from "/storage.js";
 
     const roomId = parseRoomIdFromUrl();
-    const button = document.querySelector('button[type="submit"]');
 
-    document.querySelector('form#update').addEventListener('submit', async (event) => {
-      event.preventDefault();
-      button.setAttribute('disabled', true);
+    document.querySelector('form#update').addEventListener('submit', handleFormSubmit);
+    document.addEventListener("user-verified", handleUserVerified);
 
-      const formData = new FormData(event.target);
 
-      try {
-        const file = formData.get('picture');
-        if (file) await uploadProfilePicture({ roomId, file });
-        await updateRoom({
-          roomId,
-          name: formData.get('name'),
-          bio: formData.get('bio'),
-        });
-
-        window.location.href = `/room/${roomId}`;
-      } catch (error) {
-        console.error(error);
-        alert(error.message);
-      } finally {
-        button.removeAttribute('disabled');
-      }
-    });
-
-    document.addEventListener("auth-changed", async () => {
+    async function handleUserVerified(event) {
       const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error);
 
       if (!profile) {
@@ -128,7 +107,32 @@
         document.querySelector('input[name="name"]').value = profile.name || '';
         document.querySelector('textarea[name="bio"]').innerText = profile.bio || '';
       }
-    });
+    }
+
+    async function handleFormSubmit(event) {
+      event.preventDefault();
+      const button = document.querySelector('button[type="submit"]');
+      button.setAttribute('disabled', true);
+
+      const formData = new FormData(event.target);
+
+      try {
+        const file = formData.get('picture');
+        if (file) await uploadProfilePicture({ roomId, file });
+        await updateRoom({
+          roomId,
+          name: formData.get('name'),
+          bio: formData.get('bio'),
+        });
+
+        window.location.href = `/room/${roomId}`;
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+      } finally {
+        button.removeAttribute('disabled');
+      }
+    }
   </script>
 </body>
 

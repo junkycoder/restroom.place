@@ -116,29 +116,15 @@
     const postForm = document.querySelector("#post");
     const postSubmitButton = postForm.querySelector('button[type="submit"]');
 
-    postForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      postSubmitButton.setAttribute('disabled', true);
-      const formData = new FormData(event.target);
 
-      try {
-        const { data: newPost } = await createPost({
-          roomId,
-          text: formData.get('text'),
-        });
-        document.querySelector('main').insertAdjacentHTML('beforeend', renderPost(newPost));
-        postForm.reset();
-        document.querySelector('main article.placeholder')?.remove();
-      } catch (error) {
-        console.error(error);
-        alert(error.message);
-      } finally {
-        postSubmitButton.removeAttribute('disabled');
-      }
-    });
+    document.addEventListener("user-verified", handlePublicProfile);
+    document.addEventListener("user-anonymous", handlePublicProfile);
 
-    document.addEventListener("auth-changed", async () => {
+    postForm.addEventListener("submit", handleFormSubmit);
+
+    async function handlePublicProfile() {
       const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error);
+
       if (!profile) {
         alert("Místnost neexistuje, ale můžete ji vytvořit.")
         window.location.href = roomId ? '/room/generate' : `/room/generate?roomId=${roomId}`;
@@ -169,11 +155,8 @@
 
       if (profile.initialized) {
         document.querySelector("header h1").innerText = profile.name || '';
-
         document.querySelector("#bio")[profile.html ? 'innerHTML' : 'innerText'] = profile.html || profile.bio || '';
-
         document.querySelector("header img").src = await getRoomProfilePictureUrl(roomId);
-
         document.querySelector("header").classList.remove("hidden")
         document.querySelector("header").setAttribute('aria-hidden', false);
       }
@@ -181,7 +164,6 @@
       document.querySelector('body header').addEventListener("long-press", () => {
         window.location.href = `/room/${roomId}/manage`;
       });
-
 
       const posts = await getCollectionData(`rooms/${roomId}/posts`).catch(console.error) || [];
 
@@ -191,13 +173,33 @@
             <p>Zatím nejsou zde žádné příspěvky.</p>
           </article>
         `;
-
       } else if (posts.length) {
         document.querySelector("main").innerHTML = posts.map(renderPost).join('');
       }
+    }
 
-    });
 
+    async function handleFormSubmit(event) {
+
+      event.preventDefault();
+      postSubmitButton.setAttribute('disabled', true);
+      const formData = new FormData(event.target);
+
+      try {
+        const { data: newPost } = await createPost({
+          roomId,
+          text: formData.get('text'),
+        });
+        document.querySelector('main').insertAdjacentHTML('beforeend', renderPost(newPost));
+        postForm.reset();
+        document.querySelector('main article.placeholder')?.remove();
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+      } finally {
+        postSubmitButton.removeAttribute('disabled');
+      }
+    }
 
     function renderPost(post) {
       let markup = `<pre>${post.text}</pre>`

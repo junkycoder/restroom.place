@@ -17,7 +17,6 @@ if (isLocalhost()) {
 export async function uploadProfilePicture({ roomId, file }) {
   const [name, ext] = file.name.split(".");
   const storageRef = ref(storage, `public/rooms/${roomId}/profile.${ext}`);
-
   await uploadBytes(storageRef, file);
 }
 
