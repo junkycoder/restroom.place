@@ -202,12 +202,12 @@
     }
 
     function renderPost(post) {
-      let markup = `<pre>${post.text}</pre>`
+      let markup = post.text;
       if (post.html) markup = post.html;
       if (!markup) return '';
       return `
         <article data-post-id="${post.id}">
-          ${markup}
+          <pre>${markup}</pre>
         </article>
       `;
     }
