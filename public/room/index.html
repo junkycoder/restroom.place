@@ -102,7 +102,7 @@
   <main>
   </main>
   <script type="module">
-    import { parseRoomIdFromUrl } from "/library.js";
+    import { parseRoomIdFromUrl, cleanHTML } from "/library.js";
     import { getDocData, getCollectionData } from "/firestore.js"
     import { isCurrentUserVerified } from "/authentication.js";
     import { getRoomProfilePictureUrl } from "/storage.js";
@@ -178,7 +178,6 @@
 
 
     async function handleFormSubmit(event) {
-
       event.preventDefault();
       postSubmitButton.setAttribute('disabled', true);
       const formData = new FormData(event.target);
@@ -205,7 +204,7 @@
       if (post.html) markup = post.html;
       return `
         <article data-post-id="${post.id}">
-          ${markup}
+          ${cleanHTML(markup)}
         </article>
       `;
     }
