@@ -42,24 +42,26 @@
       padding: 8px 0;
       border-top: 1px solid #eee;
       line-height: 1.2;
-      font-size: 14px;
+      font-size: 16px;
+      font-family: monospace;
     }
 
     article:last-child {
       border-bottom: 1px solid #eee;
     }
 
-    article pre {
-      white-space: pre-wrap;
-    }
-
     article img {
       max-width: 100%;
     }
 
+    article > p {
+      margin: 8px 0;
+    }
+
     aside {
       width: 100%;
-      margin-bottom: 12px;
+      margin-top: 16px;
+      padding-top: 16px;
     }
 
     aside form {
@@ -96,8 +98,6 @@
       <div id="bio"></div>
     </div>
   </header>
-  <main>
-  </main>
   <aside>
     <form method="POST" id="post" class="hidden" aria-hidden="true">
       <textarea placeholder="Vaše zpráva?" required name="text"></textarea>
@@ -107,6 +107,8 @@
       </div>
     </form>
   </aside>
+  <main>
+  </main>
   <script type="module">
     import { parseRoomIdFromUrl } from "/library.js";
     import { getDocData, getCollectionData } from "/firestore.js"
@@ -169,7 +171,7 @@
         window.location.href = `/room/${roomId}/manage`;
       });
 
-      const posts = await getCollectionData(`rooms/${roomId}/posts`).catch(console.error) || [];
+      const posts = await getCollectionData(`rooms/${roomId}/posts`, { dir: "desc" }).catch(console.error) || [];
 
       if (profile.initialized && !posts.length) {
         document.querySelector("main").innerHTML = `
@@ -194,7 +196,7 @@
           roomId,
           text: formData.get('text'),
         });
-        document.querySelector('main').insertAdjacentHTML('beforeend', renderPost(newPost));
+        document.querySelector('main').insertAdjacentHTML('afterBegin', renderPost(newPost));
         postForm.reset();
         document.querySelector('main article.placeholder')?.remove();
       } catch (error) {
@@ -211,7 +213,7 @@
       if (!markup) return '';
       return `
         <article data-post-id="${post.id}">
-          <pre>${markup}</pre>
+          ${markup}
         </article>
       `;
     }
