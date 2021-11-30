@@ -122,12 +122,12 @@
       const formData = new FormData(event.target);
 
       try {
-        await createPost({
+        const { data: newPost } = await createPost({
           roomId,
           text: formData.get('text'),
         });
-
-        window.location.href = `/room/${roomId}`;
+        document.querySelector('main').insertAdjacentHTML('beforeend', renderPost(newPost));
+        postForm.reset();
       } catch (error) {
         console.error(error);
         alert(error.message);
@@ -195,16 +195,19 @@
         document.querySelector("main").innerHTML = posts.map(renderPost).join('');
       }
 
-      function renderPost(post) {
-        let markup = `<pre>${post.text}</pre>`
-        if (post.html) markup = post.html;
-        return `
-          <article data-post-id="${post.id}">
-            ${markup}
-          </article>
-        `;
-      }
     });
+
+
+    function renderPost(post) {
+      let markup = `<pre>${post.text}</pre>`
+      if (post.html) markup = post.html;
+      if (!markup) return '';
+      return `
+        <article data-post-id="${post.id}">
+          ${markup}
+        </article>
+      `;
+    }
   </script>
 </body>
 

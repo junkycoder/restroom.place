@@ -39,16 +39,20 @@ exports.createPost = functions
       const doc = await transaction.get(ref);
       const createdAt = admin.firestore.FieldValue.serverTimestamp();
 
-      await transaction.create(ref, {
+      const post = {
         text,
         html: marked.parse(text),
         createdAt,
-      });
+      };
+
+      await transaction.create(ref, post);
 
       await transaction.create(uref, {
         roomId,
         postId: ref.id,
         createdAt,
       });
+
+      return post;
     });
   });
