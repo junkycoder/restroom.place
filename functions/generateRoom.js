@@ -34,9 +34,6 @@ exports.generateRoom = functions
     const db = admin.firestore();
     const ref = db.doc(`rooms/${roomId}`);
     const profileRef = db.doc(`rooms/${roomId}/public/profile`);
-    const qr = await qrcode.toDataURL(roomUrl, {
-      rendererOpts: { quality: 1 },
-    });
 
     return db.runTransaction(async (transaction) => {
       const doc = await transaction.get(ref);
@@ -50,7 +47,9 @@ exports.generateRoom = functions
 
       await transaction.create(ref, {
         id: roomId,
-        qr,
+        qr: await qrcode.toString(roomUrl, {
+          type: "svg",
+        }),
         creatorId: context.auth.uid,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
       });

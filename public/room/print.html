@@ -31,7 +31,7 @@
       box-sizing: content-box;
     }
 
-    .room-sticker img {
+    .room-sticker svg {
       width: var(--size);
       height: var(--size);
       border: 1pt solid var(--color-primary);
@@ -40,6 +40,7 @@
 
     .room-sticker h2 {
       font-size: var(--font-size);
+      margin: 16px 0;
     }
 
     .room-sticker span {
@@ -86,7 +87,7 @@
   <main class="center-flex">
     <div class="room-sticker center-flex">
       <h2>restroom.place</h2>
-      <img class="hidden" src="" alt="QR" id="qr">
+      <div class="hidden" id="qr"></div>
       <span id="room-id"></span>
       <script type="module">
         import { parseRoomIdFromUrl } from "/library.js";
@@ -104,8 +105,6 @@
         // Send anonymous user to verify themself
         document.addEventListener("user-anonymous", handleUserAnonymous);
 
-
-
         function handleWithPromptChange(title, defaulta) {
           return (event) => {
             event.target.innerHTML = window.prompt(title, defaulta) || "&nbsp;";
@@ -122,15 +121,9 @@
         async function handleUserVerified(user) {
           const { qr } = await getDocData(`rooms/${roomId}`).catch(console.error) || {};
 
-          if (!qr) {
-            if (window.confirm("Nemáte nálepku. Chcete ji vytvořit?")) {
-              window.location.href = `/room/generate`;
-            } else {
-              window.close();
-            }
-          } else {
-            const imgElm = document.querySelector('img#qr');
-            imgElm.src = qr;
+          if (qr) {
+            const imgElm = document.querySelector('#qr');
+            imgElm.innerHTML = qr;
             imgElm.classList.remove("hidden");
             document.querySelector('#room-id').innerText = roomId;
           }
