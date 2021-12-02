@@ -101,11 +101,22 @@
         // Once user is verified, get the sticker and display it
         document.addEventListener("user-verified", handleUserVerified);
 
+        // Send anonymous user to verify themself
+        document.addEventListener("user-anonymous", handleUserAnonymous);
+
+
 
         function handleWithPromptChange(title, defaulta) {
           return (event) => {
             event.target.innerHTML = window.prompt(title, defaulta) || "&nbsp;";
           };
+        }
+
+        function handleUserAnonymous() {
+          alert("Na tohle nemáte oprávnění.\nPokud si chcete vytisknout nálepku, ověřte se.")
+          window.location.href = `/user/verify-self?destination=${encodeURIComponent(
+            window.location.pathname
+          )}`;
         }
 
         async function handleUserVerified(user) {
@@ -130,7 +141,7 @@
   <footer class="center-text">
     <a class="button" href="javascript:print()">Vytisknout</a>
     <p class="disclaimer">
-      Také je možné tuto stránku sdílet někomu jinému.
+      Pokud nefunguje, použijte tlačítko <strong>sdílet</strong> v prohlížeči.
     </p>
     <script type="module">
       const printButton = document.querySelector('#print');
