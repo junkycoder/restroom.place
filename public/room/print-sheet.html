@@ -21,6 +21,7 @@
       display: grid;
       grid-template-columns: repeat(4, var(--w));
       grid-gap: 4pt;
+      /* grid-row-gap: 24pt; */
     }
 
     article.sticker {
@@ -28,20 +29,22 @@
       text-align: center;
       /* box-sizing: border-box; */
       position: relative;
-      padding: 1pt;
+      padding: 2pt;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
     }
 
     article.sticker>svg {
-      /* height: calc(var(--h) - 60pt); */
-      /* width: calc(var(--w) - 12pt); */
-      /* height: 100%;
-      width: 100%; */
+      flex: 1;
+      justify-self: center;
     }
 
     article.sticker>h1 {
       margin-bottom: 0;
       padding-bottom: 0;
-      font-size: 24pt;
+      font-size: 20pt;
+      font-family: monospace;
     }
   </style>
   <script type="module" src="/runtime.js"></script>
