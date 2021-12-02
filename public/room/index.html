@@ -130,7 +130,7 @@
 
       if (!profile) {
         alert("Místnost neexistuje, ale můžete ji vytvořit.")
-        window.location.href = roomId ? '/room/generate' : `/room/generate?roomId=${roomId}`;
+        window.location.href = !roomId ? '/room/generate' : `/room/generate?roomId=${roomId}`;
       }
 
       if (!profile.initialized) {

@@ -45,11 +45,13 @@ exports.generateRoom = functions
         );
       }
 
+      const qr = await qrcode.toString(roomUrl, {
+        type: "svg",
+      });
+
       await transaction.create(ref, {
         id: roomId,
-        qr: await qrcode.toString(roomUrl, {
-          type: "svg",
-        }),
+        qr,
         creatorId: context.auth.uid,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
       });
