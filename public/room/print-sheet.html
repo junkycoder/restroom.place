@@ -12,24 +12,36 @@
     }
 
     body {
-      --sticker-width: calc(100vw / 3);
-
+      --w: calc(100vw / 4);
+      --h: calc(100vh / 2);
       margin: 0;
       padding: 0;
       width: 100vw;
       height: 100vh;
-
       display: grid;
-      grid-template-columns: var(--sticker-width) var(--sticker-width) var(--sticker-width);
-      grid-gap: 10px;
+      grid-template-columns: repeat(4, var(--w));
+      grid-gap: 4pt;
     }
 
     article.sticker {
       border: 1px solid;
+      text-align: center;
+      /* box-sizing: border-box; */
+      position: relative;
+      padding: 1pt;
     }
 
     article.sticker>svg {
-      /* width: var(--sticker-width); */
+      /* height: calc(var(--h) - 60pt); */
+      /* width: calc(var(--w) - 12pt); */
+      /* height: 100%;
+      width: 100%; */
+    }
+
+    article.sticker>h1 {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      font-size: 24pt;
     }
   </style>
   <script type="module" src="/runtime.js"></script>
@@ -48,18 +60,84 @@
         alert("Neplatná místnost");
         return;
       }
-      parseSticker({ qr, id }, { n: 6 });
+
+      parseSticker({ qr, id }, { n: 8 });
     }
 
     function parseSticker({ id, qr }, { n = 1 } = {}) {
-      const element = document.createElement("article");
-      element.innerHTML = qr;
-      element.dataset.id = id;
-      element.classList.add('sticker');
+      const sticker = document.createElement("article");
+      sticker.innerHTML = qr;
+      sticker.dataset.id = id;
+      sticker.classList.add('sticker');
+
 
       for (let i = 0; i < n; i++) {
-        document.body.appendChild(element.cloneNode(true));
+        const clone = sticker.cloneNode(true);
+        document.body.appendChild(clone);
+        clone.insertAdjacentHTML('afterBegin', `<h1>${randomTitle()}</h1>`);
       }
+    }
+
+    function randomTitle() {
+      const titles = [
+        "Nerozumim tomu",
+        "Co to je?",
+        "Proč se to stalo?",
+        "Co to znamená?",
+        "Kde to skončí?",
+        "Kam to vede?",
+        "Už tam budem?",
+        "Kolik je let?",
+        "Bojíte se?",
+        "Nekoukat.",
+        "Proč?",
+        "Co?",
+        "Kde?",
+        "Ach jo.",
+        "Kreténi z IT",
+        "Kde je to?",
+        "Víš to taky?",
+        "Kde si bylo?",
+        "Neznám tě, ale...",
+        "Kolik to stojí?",
+        "Zapomeň.",
+        "Je tu uklizeno?",
+        "Je to tvůj šéf?",
+        "Najšel jsi to?",
+        "Co ti chybí?",
+        "Proč to děláš?",
+        "Kde ses tu vzal?",
+        "Už tam budeš?",
+        "Kdo to rozbil?",
+        "Už to jde.",
+        "Umyj si ruce.",
+        "Moc nečum.",
+        "Nemám to.",
+        "Chceš práci?",
+        "Ja ti rozumim.",
+        "Nikdo tě nemá rád.",
+        "Chce se mi řvát.",
+        "Půjč mi kilo",
+        "Nepochopíš",
+        "Já to vzdávám",
+        "Dvakrát měř",
+        "Chybí toaleťák!",
+        "Najdi chybu.",
+        "Dobře ty",
+        "Uhni prosím",
+        "Šplouchá to?",
+        "Kolik ti je?",
+        "Sluší ti to.",
+        "Dveře ven",
+        "Opatrně.",
+        "Neboj se.",
+        "Kéžby to bylo.",
+        "Pohoda.",
+        "Nikdo tě nedrží.",
+      ];
+
+      // return random title
+      return titles[Math.floor(Math.random() * titles.length)];
     }
   </script>
 </head>
