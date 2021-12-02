@@ -28,6 +28,10 @@ body.mobile-viewport {
   }
 }
 
+header > p {
+  text-align: center;
+}
+
 header h1, main > h2 {
   text-align: center;
 }
