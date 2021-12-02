@@ -21,6 +21,10 @@
         "destination": "/room/print.html"
       },
       {
+        "source": "/room/**/print-sheet",
+        "destination": "/room/print-sheet.html"
+      },
+      {
         "source": "/room/**/manage",
         "destination": "/room/manage.html"
       },

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tisk Archu nálepek</title>
+  <style media="all">
+    .firebase-emulator-warning {
+      display: none !important;
+    }
+
+    body {
+      --sticker-width: calc(100vw / 3);
+
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+
+      display: grid;
+      grid-template-columns: var(--sticker-width) var(--sticker-width) var(--sticker-width);
+      grid-gap: 10px;
+    }
+
+    article.sticker {
+      border: 1px solid;
+    }
+
+    article.sticker>svg {
+      /* width: var(--sticker-width); */
+    }
+  </style>
+  <script type="module" src="/runtime.js"></script>
+  <script type="module">
+    import { parseRoomIdFromUrl } from "/library.js";
+    import { getDocData } from "/firestore.js";
+
+    const roomId = parseRoomIdFromUrl();
+
+    document.addEventListener("user-verified", handleScreen);
+
+
+    async function handleScreen() {
+      const { qr, id } = await getDocData(`rooms/${roomId}`).catch(console.error) || {};
+      if (!qr) {
+        alert("Neplatná místnost");
+        return;
+      }
+      parseSticker({ qr, id }, { n: 6 });
+    }
+
+    function parseSticker({ id, qr }, { n = 1 } = {}) {
+      const element = document.createElement("article");
+      element.innerHTML = qr;
+      element.dataset.id = id;
+      element.classList.add('sticker');
+
+      for (let i = 0; i < n; i++) {
+        document.body.appendChild(element.cloneNode(true));
+      }
+    }
+  </script>
+</head>
+
+<body>
+</body>
+
+</html>
