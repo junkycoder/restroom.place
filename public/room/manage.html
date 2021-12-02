@@ -63,7 +63,7 @@
       <h2>3. Název a Bio</h2>
       <p>Uveďte výstižné jméno a stručný popis místa, ať je jasné o co tady jde.</p>
       <input maxlength="72" type="text" name="name" required placeholder="U Zádi" class="mb16" />
-      <textarea maxlength="256" required name="bio" placeholder="Nejlepší underground podnik v okolí."></textarea>
+      <textarea required name="bio" placeholder="Nejlepší underground podnik v okolí."></textarea>
       <button type="submit">Publikovat</button>
     </form>
   </main>
@@ -89,7 +89,9 @@
 
       if (profile?.initialized) {
         document.querySelector('input[name="sticked"]').checked = true;
-        document.querySelector('textarea[name="bio"]').innterText = profile.bio;
+        const bioElement = document.querySelector('textarea[name="bio"]');
+        bioElement.innterText = profile.bio;
+        bioElement.style.minHeight = profile.bio.split('\n').length * 24 + 'px';
       }
 
       const pictureUrl = await getRoomProfilePictureUrl(roomId);
