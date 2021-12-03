@@ -31,19 +31,24 @@
       box-sizing: content-box;
     }
 
-    .room-sticker svg {
+    .room-sticker__qrcode {
       width: var(--size);
       height: var(--size);
       border: 1pt solid var(--color-primary);
       z-index: 1;
     }
 
-    .room-sticker h2 {
+    .room-sticker__qrcode>* {
+      height: 100%;
+      width: 100%;
+    }
+
+    .room-sticker__title {
       font-size: var(--font-size);
       margin: 16px 0;
     }
 
-    .room-sticker span {
+    .room-sticker__id{
       font-size: calc(var(--font-size) * 0.6);
       line-height: 2;
     }
@@ -86,18 +91,18 @@
   </header>
   <main class="center-flex">
     <div class="room-sticker center-flex">
-      <h2>restroom.place</h2>
-      <div class="hidden" id="qr"></div>
-      <span id="room-id"></span>
+      <h2 class="room-sticker__title">restroom.place</h2>
+      <div class="room-sticker__qrcode"></div>
+      <span class="room-sticker__id">&nbsp;</span>
+      <script src="https://unpkg.com/qrcode-generator@1.4.4/qrcode.js"></script>
       <script type="module">
         import { parseRoomIdFromUrl } from "/library.js";
-        import { getDocData } from "/firestore.js";
 
         const roomId = parseRoomIdFromUrl();
 
         //  Allow edit sticker title and footer directrlty in the browser
-        document.querySelector('.room-sticker h2').addEventListener('click', handleWithPromptChange("Název místa", 'restroom.place'));
-        document.querySelector('#room-id').addEventListener('click', handleWithPromptChange("ID místa", roomId));
+        document.querySelector('.room-sticker__title').addEventListener('click', handleWithPromptChange("Název místa", 'restroom.place'));
+        document.querySelector('.room-sticker__id').addEventListener('click', handleWithPromptChange("ID místa", roomId));
 
         // Once user is verified, get the sticker and display it
         document.addEventListener("user-verified", handleUserVerified);
@@ -118,27 +123,29 @@
           )}`;
         }
 
+
         async function handleUserVerified(user) {
-          const { qr } = await getDocData(`rooms/${roomId}`).catch(console.error) || {};
+          document.querySelector('.room-sticker__id').innerText = roomId;
+
+          const qr = qrcode(4, "L");
+          qr.addData(`https://restroom.place/room/${roomId}?fe`);
+          qr.make();
 
           if (qr) {
-            const imgElm = document.querySelector('#qr');
-            imgElm.innerHTML = qr;
-            imgElm.classList.remove("hidden");
-            document.querySelector('#room-id').innerText = roomId;
+            const imgElm = document.querySelector('.room-sticker__qrcode');
+            imgElm.innerHTML = qr.createSvgTag(150);
           }
         }
       </script>
     </div>
   </main>
   <footer class="center-text">
-    <a class="button" href="javascript:print()">Vytisknout</a>
+    <a class="print" class="button" href="javascript:print()">Vytisknout</a>
     <p class="disclaimer">
       Pokud nefunguje, použijte tlačítko <strong>sdílet</strong> v prohlížeči.
     </p>
     <script type="module">
-      const printButton = document.querySelector('#print');
-      if (!window.print) printButton.remove();
+      if (!window.print) document.querySelector('footer .print').remove();
     </script>
   </footer>
 </body>
