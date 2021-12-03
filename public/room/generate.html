@@ -53,6 +53,7 @@
   <script type="module">
     import { isCurrentUserVerified } from "/authentication.js";
     import { generateRoom } from "/functions.js";
+    import { randomRoomId } from "/library.js";
 
     // Prefill room identificator if any in url params.
     try {
@@ -82,7 +83,7 @@
         return;
       }
 
-      const roomIdValue = event.target.identificator.value || Date.now();
+      const roomIdValue = event.target.identificator.value || randomRoomId();
       const roomId = roomIdValue.toString().replace(/[^a-z0-9]/gi, '_').toLowerCase();
 
       try {

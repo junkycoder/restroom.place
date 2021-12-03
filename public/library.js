@@ -129,3 +129,9 @@ export function cleanHTML(str, nodes) {
   // Otherwise, pass a sanitized string back
   return nodes ? html.childNodes : html.innerHTML;
 }
+
+export function randomRoomId() {
+  return Math.random()
+    .toString(36)
+    .substring(2, 15);
+}

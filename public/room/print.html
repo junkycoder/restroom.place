@@ -48,7 +48,7 @@
       margin: 16px 0;
     }
 
-    .room-sticker__id{
+    .room-sticker__id {
       font-size: calc(var(--font-size) * 0.6);
       line-height: 2;
     }
@@ -94,9 +94,9 @@
       <h2 class="room-sticker__title">restroom.place</h2>
       <div class="room-sticker__qrcode"></div>
       <span class="room-sticker__id">&nbsp;</span>
-      <script src="https://unpkg.com/qrcode-generator@1.4.4/qrcode.js"></script>
       <script type="module">
         import { parseRoomIdFromUrl } from "/library.js";
+        import { createQrCode } from "/qrcode.js";
 
         const roomId = parseRoomIdFromUrl();
 
@@ -126,16 +126,9 @@
 
         async function handleUserVerified(user) {
           document.querySelector('.room-sticker__id').innerText = roomId;
-
-          const qr = qrcode(4, "L");
-          qr.addData(`https://restroom.place/room/${roomId}?fe`);
-          qr.make();
-
-          if (qr) {
-            const imgElm = document.querySelector('.room-sticker__qrcode');
-            imgElm.innerHTML = qr.createSvgTag(150);
-          }
+          document.querySelector('.room-sticker__qrcode').innerHTML = createQrCode(roomId);
         }
+
       </script>
     </div>
   </main>

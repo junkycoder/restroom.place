@@ -20,66 +20,98 @@
       height: 100vh;
       display: grid;
       grid-template-columns: repeat(4, var(--w));
-      grid-gap: 4pt;
+      grid-template-rows: repeat(4, var(--h));
+      grid-gap: 12pt;
       /* grid-row-gap: 24pt; */
     }
 
-    article.sticker {
+    .sticker {
       border: 1px solid;
       text-align: center;
-      /* box-sizing: border-box; */
-      position: relative;
       padding: 2pt;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
     }
 
-    article.sticker>svg {
+    .sticker__space {
+      flex: 1
+    }
+
+    .sticker__title {
       flex: 1;
-      justify-self: center;
+      display: flex;
+      align-items: center;
+    }
+    .sticker__title h1 {
+      font-size: 21pt;
+      font-family: monospace;
+      padding: 4pt;
+      margin: 8pt 0;
+      box-sizing: border-box;
     }
 
-    article.sticker>h1 {
-      margin-bottom: 0;
-      padding-bottom: 0;
-      font-size: 20pt;
-      font-family: monospace;
+    .sticker__code {
+      flex: 2;
+    }
+
+    .sticker__code svg {
+      width: 99.9%;
+      height: 99.9%;
     }
   </style>
   <script type="module" src="/runtime.js"></script>
   <script type="module">
-    import { parseRoomIdFromUrl } from "/library.js";
-    import { getDocData } from "/firestore.js";
+    import { parseRoomIdFromUrl, getUrlParam, randomRoomId } from "/library.js";
+    import { createQrCode } from "/qrcode.js";
 
     const roomId = parseRoomIdFromUrl();
+    const codesCount = getUrlParam("count") || 8;
+    const roomPrefix = getUrlParam("prefix") || 8;
+
 
     document.addEventListener("user-verified", handleScreen);
 
-
     async function handleScreen() {
-      const { qr, id } = await getDocData(`rooms/${roomId}`).catch(console.error) || {};
-      if (!qr) {
-        alert("Neplatná místnost");
-        return;
-      }
 
-      parseSticker({ qr, id }, { n: 8 });
+      if (roomId === 'print-sheet') {
+        for (let i = 0; i < codesCount; i++) {
+          const sticker = createStickerElement();
+          document.body.appendChild(sticker);
+        }
+      } else {
+        const qr = createQrCode(roomId);
+        for (let i = 0; i < codesCount; i++) {
+          const sticker = createStickerElement(roomId);
+          document.body.appendChild(sticker);
+        }
+      }
     }
 
-    function parseSticker({ id, qr }, { n = 1 } = {}) {
+    function createStickerElement(id) {
+      if (!id) {
+        id = randomRoomId();
+      }
+
       const sticker = document.createElement("article");
-      sticker.innerHTML = qr;
       sticker.dataset.id = id;
       sticker.classList.add('sticker');
 
 
-      for (let i = 0; i < n; i++) {
-        const clone = sticker.cloneNode(true);
-        document.body.appendChild(clone);
-        clone.insertAdjacentHTML('afterBegin', `<h1>${randomTitle()}</h1>`);
-      }
+      sticker.insertAdjacentHTML('afterBegin', `<div class="sticker__title"><h1>${randomTitle()}</h1></div>`);
+
+      const image = document.createElement("div");
+      image.classList.add('sticker__code');
+      image.innerHTML = createQrCode(id);
+
+      sticker.appendChild(image);
+
+      return sticker;
     }
+
 
     function randomTitle() {
       const titles = [
@@ -118,7 +150,7 @@
         "Nemám to.",
         "Chceš práci?",
         "Ja ti rozumim.",
-        "Nikdo tě nemá rád.",
+        "Nikdo to nemá rád.",
         "Chce se mi řvát.",
         "Půjč mi kilo",
         "Nepochopíš",
@@ -152,7 +184,7 @@
         "Nesahej na to.",
         "Nepřipoj se.",
         "Si kuř",
-        "Aby ses neposral"
+        "Aby ses neposralo"
       ];
 
       return titles[Math.floor(Math.random() * titles.length)];
