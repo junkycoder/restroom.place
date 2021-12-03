@@ -120,24 +120,38 @@
     const postSubmitButton = postForm.querySelector('button[type="submit"]');
 
 
+    document.querySelector('body header').addEventListener("long-press", () => {
+      window.location.href = `/room/${roomId}/manage`;
+    });
+
     document.addEventListener("user-verified", handlePublicProfile);
     document.addEventListener("user-anonymous", handlePublicProfile);
 
     postForm.addEventListener("submit", handleFormSubmit);
 
     async function handlePublicProfile() {
-      const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(console.error);
+      const mainElement = document.querySelector('body main');
+      const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(error => {
+        mainElement.innerHTML = `<p class="center-text">Chyba se stala. ${error.message}. <br><a href="javascript:location.reload()">Zkusit znovu</a></p>`;
+        mainElement.dataset.error = error.code;
+      });
 
       if (!profile) {
-        alert("Místnost neexistuje, ale můžete ji vytvořit.")
-        window.location.href = !roomId ? '/room/generate' : `/room/generate?roomId=${roomId}`;
+        // Sometimes profile data wont load bcs of network issues, we wont to redirect user on generate then
+        // alert("Místnost neexistuje, ale můžete ji vytvořit.")
+        // window.location.href = !roomId ? '/room/generate' : `/room/generate?roomId=${roomId}`;
+
+        if (!mainElement.dataset.error) {
+          mainElement.innerHTML = `<p class="center-text">Místnost neexistuje, ale můžete ji <a href="/room/generate?roomId=${roomId}">vytvořit</a>.</p>`;
+        }
+        return;
       }
 
       if (!profile.initialized) {
         document.querySelector("header").innerHTML = `
           <h1>Místnost zatím není inicializována.</h1>
         `;
-        document.querySelector("main").innerHTML = `
+        mainElement.innerHTML = `
           <a id="manage-room" class="button" href="/room/${roomId}/manage">Spravovat místnost</a>
           <p class="disclaimer">Získáte moc nad tímto místem.</p>
         `;
@@ -151,9 +165,6 @@
             window.location.href = `/user/verify-self/?destination=${destination}`;
           }
         })
-      } else {
-        postForm.classList.remove("hidden");
-        postForm.setAttribute('aria-hidden', false);
       }
 
       if (profile.initialized) {
@@ -162,22 +173,22 @@
         document.querySelector("header img").src = await getRoomProfilePictureUrl(roomId);
         document.querySelector("header").classList.remove("hidden")
         document.querySelector("header").setAttribute('aria-hidden', false);
+
+        postForm.classList.remove("hidden");
+        postForm.setAttribute('aria-hidden', false);
       }
 
-      document.querySelector('body header').addEventListener("long-press", () => {
-        window.location.href = `/room/${roomId}/manage`;
-      });
 
       const posts = await getCollectionData(`rooms/${roomId}/posts`, { dir: "desc" }).catch(console.error) || [];
 
       if (profile.initialized && !posts.length) {
-        document.querySelector("main").innerHTML = `
+        mainElement.innerHTML = `
           <article class="placeholder">
             <p>Zatím nejsou zde žádné příspěvky.</p>
           </article>
         `;
       } else if (posts.length) {
-        document.querySelector("main").innerHTML = posts.map(renderPost).join('');
+        mainElement.innerHTML = posts.map(renderPost).join('');
       }
     }
 
