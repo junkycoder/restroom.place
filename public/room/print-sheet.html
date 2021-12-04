@@ -38,7 +38,6 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-
     }
 
     .sticker__space {
@@ -50,6 +49,7 @@
       display: flex;
       align-items: center;
     }
+
     .sticker__title h1 {
       font-size: 21pt;
       font-family: monospace;
@@ -108,6 +108,10 @@
 
 
       sticker.insertAdjacentHTML('afterBegin', `<div class="sticker__title"><h1>${randomTitle()}</h1></div>`);
+      const title = sticker.querySelector('.sticker__title');
+
+      title.addEventListener('click', event => event.target.innerText = randomTitle());
+      title.addEventListener('long-press', event => event.target.innerText = prompt("Zadejte titulek", randomTitle()));
 
       const image = document.createElement("div");
       image.classList.add('sticker__code');
@@ -157,7 +161,6 @@
         "Chceš práci?",
         "Ja ti rozumim.",
         "Nikdo to nemá rád.",
-        "Chce se mi řvát.",
         "Půjč mi kilo",
         "Nepochopíš",
         "Já to vzdávám",
@@ -167,7 +170,6 @@
         "Dobře ty",
         "Uhni prosím",
         "Šplouchá to?",
-        "Kolik ti je?",
         "Sluší ti to.",
         "Dveře ven",
         "Opatrně.",
@@ -188,9 +190,19 @@
         "Poser strop.",
         "Utři si prdel!",
         "Nesahej na to.",
-        "Nepřipoj se.",
+        "Zapoj se.",
         "Si kuř",
-        "Aby ses neposralo"
+        "Už to bude?",
+        "Hezky pěkně.",
+        "Jak to víš?",
+        "Neznáme se?",
+        "Kolik je hodin?",
+        "Už to začalo?",
+        "Tohle se povedlo.",
+        "Kolikrát ještš?",
+        "To by stačilo.",
+        "Nikdo nic neví",
+        "Tajné zprávy",
       ];
 
       return titles[Math.floor(Math.random() * titles.length)];
