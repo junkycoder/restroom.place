@@ -11,6 +11,10 @@
       display: none !important;
     }
 
+    @page {
+      size: landscape;
+    }
+
     body {
       --w: calc(100vw / 4);
       --h: calc(100vh / 2);
@@ -64,6 +68,7 @@
     }
   </style>
   <script type="module" src="/runtime.js"></script>
+  <script src="https://unpkg.com/qrcode-generator@1.4.4/qrcode.js"></script>
   <script type="module">
     import { parseRoomIdFromUrl, getUrlParam, randomRoomId } from "/library.js";
     import { createQrCode } from "/qrcode.js";

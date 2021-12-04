@@ -82,6 +82,7 @@
       }
      */
   </style>
+  <script src="https://unpkg.com/qrcode-generator@1.4.4/qrcode.js"></script>
 </head>
 
 <body class="center-flex">
@@ -105,10 +106,10 @@
         document.querySelector('.room-sticker__id').addEventListener('click', handleWithPromptChange("ID místa", roomId));
 
         // Once user is verified, get the sticker and display it
-        document.addEventListener("user-verified", handleUserVerified);
+        document.addEventListener("user-verified", handleScreen);
 
         // Send anonymous user to verify themself
-        document.addEventListener("user-anonymous", handleUserAnonymous);
+        document.addEventListener("user-anonymous", handleScreen);
 
         function handleWithPromptChange(title, defaulta) {
           return (event) => {
@@ -116,15 +117,7 @@
           };
         }
 
-        function handleUserAnonymous() {
-          alert("Na tohle nemáte oprávnění.\nPokud si chcete vytisknout nálepku, ověřte se.")
-          window.location.href = `/user/verify-self?destination=${encodeURIComponent(
-            window.location.pathname
-          )}`;
-        }
-
-
-        async function handleUserVerified(user) {
+        async function handleScreen(user) {
           document.querySelector('.room-sticker__id').innerText = roomId;
           document.querySelector('.room-sticker__qrcode').innerHTML = createQrCode(roomId);
         }
