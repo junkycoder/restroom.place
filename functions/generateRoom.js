@@ -1,5 +1,4 @@
 const functions = require("firebase-functions");
-const qrcode = require("qrcode");
 const admin = require("firebase-admin");
 
 const PROCTION_DOMAIN = "restroom.place";
@@ -45,13 +44,8 @@ exports.generateRoom = functions
         );
       }
 
-      const qr = await qrcode.toString(roomUrl, {
-        type: "svg",
-      });
-
       await transaction.create(ref, {
         id: roomId,
-        qr,
         creatorId: context.auth.uid,
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
       });
@@ -62,6 +56,6 @@ exports.generateRoom = functions
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
       });
 
-      return qr;
+      return "Hotovson";
     });
   });

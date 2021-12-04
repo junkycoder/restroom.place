@@ -87,7 +87,7 @@
       const roomId = roomIdValue.toString().replace(/[^a-z0-9]/gi, '_').toLowerCase();
 
       try {
-        const { data: qrImage } = await generateRoom({ roomId });
+        await generateRoom({ roomId });
         window.location.href = `/room/${roomId}/print`;
       } catch (error) {
 
