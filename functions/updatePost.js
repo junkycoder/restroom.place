@@ -3,7 +3,7 @@ const admin = require("firebase-admin");
 const marked = require("marked");
 
 /**
- * Update (or delete) post if crator, incidator or author.
+ * Update (or delete) post if room creator, initializator or post author.
  */
 exports.updatePost = functions.https.onCall(
   async ({ roomId, postId, text, forceDelete }, context) => {
@@ -27,7 +27,6 @@ exports.updatePost = functions.https.onCall(
         "The function must be called with a valid postId."
       );
     }
-    console.log({postId})
 
     const room = await admin.firestore().collection("rooms").doc(roomId).get();
     const isRoomManager = [
@@ -57,12 +56,6 @@ exports.updatePost = functions.https.onCall(
         );
       }
 
-      console.log(
-        room.get("creatorId"),
-        room.get("initializatorId"),
-        context.auth.uid,
-        udoc.exists
-      );
 
       if (!udoc.exists && !isRoomManager) {
         throw new functions.https.HttpsError(
