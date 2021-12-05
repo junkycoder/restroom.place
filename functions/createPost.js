@@ -33,7 +33,7 @@ exports.createPost = functions
 
     const db = admin.firestore();
     const ref = db.collection(`rooms/${roomId}/posts`).doc();
-    const uref = db.collection(`users/${context.auth.uid}/posts`).doc();
+    const uref = db.collection(`users/${context.auth.uid}/posts`).doc(ref.id);
 
     return db.runTransaction(async (transaction) => {
       const doc = await transaction.get(ref);
@@ -53,6 +53,6 @@ exports.createPost = functions
         createdAt,
       });
 
-      return post;
+      return { id: ref.id, ...post };
     });
   });
