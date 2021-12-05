@@ -122,7 +122,7 @@
 
       try {
         const file = formData.get('picture');
-        if (file) await uploadProfilePicture({ roomId, file });
+        if (file && file.size) await uploadProfilePicture({ roomId, file });
         await updateRoom({
           roomId,
           name: formData.get('name'),
