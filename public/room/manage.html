@@ -118,8 +118,6 @@
 
       const formData = new FormData(event.target);
 
-      debugger;
-
       try {
         const file = formData.get('picture');
         if (file && file.size) await uploadProfilePicture({ roomId, file });

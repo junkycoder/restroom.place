@@ -23,3 +23,15 @@ export async function updateRoom({ roomId, name, bio, picture }) {
 export async function createPost({ roomId, text }) {
   return httpsCallable(functions, "createPost")({ roomId, text });
 }
+
+export async function updatePost({
+  roomId,
+  text,
+  postId,
+  forceDelete = false,
+}) {
+  return httpsCallable(
+    functions,
+    "updatePost"
+  )({ roomId, text, postId, forceDelete });
+}

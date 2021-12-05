@@ -7,4 +7,5 @@ module.exports = {
   ...require("./generateRoom"),
   ...require("./updateRoom"),
   ...require("./createPost"),
+  ...require("./updatePost"),
 };

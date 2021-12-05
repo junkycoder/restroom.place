@@ -15,7 +15,7 @@ exports.updateRoom = functions
   .runWith({
     minInstances: 1,
   })
-  .https.onCall(async ({ roomId, bio, name, picture }, context) => {
+  .https.onCall(async ({ roomId, bio, name }, context) => {
     if (!context.auth || !context.auth.token.email_verified) {
       throw new functions.https.HttpsError(
         "unauthenticated",
@@ -52,7 +52,6 @@ exports.updateRoom = functions
         name,
         bio,
         html: marked.parse(bio),
-        picture,
         initialized: true,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });

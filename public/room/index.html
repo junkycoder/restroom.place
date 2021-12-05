@@ -71,6 +71,10 @@
       flex: 1;
     }
 
+    aside form>textarea.edit {
+      border-color: blue;
+    }
+
     aside form textarea {
       width: 100%;
       height: 100%;
@@ -83,6 +87,16 @@
     aside button {
       font-size: 16px;
       display: block;
+    }
+
+    aside button[type="reset"] {
+      border: 0;
+      background-color: transparent;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 4px;
+      color: blue;
     }
   </style>
 </head>
@@ -99,6 +113,7 @@
     <form method="POST" id="post" class="hidden" aria-hidden="true">
       <textarea placeholder="Vaše zpráva?" required name="text"></textarea>
       <div>
+        <button class="hidden" aria-hidden="true" type="reset">zrušit</button>
         <button type="submit">Odeslat</button>
         <p class="disclaimer">anonymně</p>
       </div>
@@ -111,13 +126,17 @@
     import { getDocData, getCollectionData } from "/firestore.js"
     import { isCurrentUserVerified } from "/authentication.js";
     import { getRoomProfilePictureUrl } from "/storage.js";
-    import { createPost } from "/functions.js";
+    import { createPost, updatePost } from "/functions.js";
 
     const roomId = parseRoomIdFromUrl();
     if (!roomId) window.location.href = "/";
 
+    const mainElement = document.querySelector('body main');
     const postForm = document.querySelector("#post");
     const postSubmitButton = postForm.querySelector('button[type="submit"]');
+
+    const postResetButton = postForm.querySelector("button[type='reset']")
+    const postInputElement = postForm.querySelector("textarea");
 
 
     document.querySelector('body header').addEventListener("long-press", () => {
@@ -128,9 +147,9 @@
     document.addEventListener("user-anonymous", handlePublicProfile);
 
     postForm.addEventListener("submit", handleFormSubmit);
+    postResetButton.addEventListener("click", handleFormReset);
 
     async function handlePublicProfile() {
-      const mainElement = document.querySelector('body main');
       const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(error => {
         mainElement.innerHTML = `<p class="center-text">Chyba se stala. ${error.message}. <br><a href="javascript:location.reload()">Zkusit znovu</a></p>`;
         mainElement.dataset.error = error.code;
@@ -190,7 +209,9 @@
           </article>
         `;
       } else if (posts.length) {
-        mainElement.innerHTML = posts.map(renderPost).join('');
+        for (let i = 0; i < posts.length; i++) {
+          mainElement.appendChild(createPostElement(posts[i]));
+        }
       }
     }
 
@@ -201,11 +222,25 @@
       const formData = new FormData(event.target);
 
       try {
-        const { data: newPost } = await createPost({
-          roomId,
-          text: formData.get('text'),
-        });
-        document.querySelector('main').insertAdjacentHTML('afterBegin', renderPost(newPost));
+        if (postInputElement.classList.contains("edit")) {
+          const postId = postInputElement.dataset.postId;
+          const originalPostElement = mainElement.querySelector(`article[data-id="${postId}"]`);
+          const { data: updatedPost } = await updatePost({
+            roomId,
+            postId,
+            text: formData.get("text")
+          });
+
+          handleFormReset(event);
+          originalPostElement.replaceWith(createPostElement(updatedPost));
+        } else {
+          const { data: newPost } = await createPost({
+            roomId,
+            text: formData.get('text'),
+          });
+          mainElement.prepend(createPostElement(newPost));
+        }
+
         postForm.reset();
         document.querySelector('main article.placeholder')?.remove();
       } catch (error) {
@@ -216,15 +251,45 @@
       }
     }
 
-    function renderPost(post) {
-      if (!post.text && !post.html) return '';
+    function handleFormReset(event) {
+      event.preventDefault();
+      postForm.reset();
+      postInputElement.classList.remove("edit");
+      postInputElement.dataset.postId = null;
+      postInputElement.value = "";
+      postSubmitButton.innerText = "Odeslat";
+      postResetButton.classList.add("hidden");
+      postResetButton.setAttribute('aria-hidden', true);
+      postForm.querySelector(".disclaimer").classList.remove("hidden");
+    }
+
+    function handlePostUpdate(post) {
+      return event => {
+        event.preventDefault();
+
+        postInputElement.classList.add("edit");
+        postInputElement.dataset.postId = post.id;
+        postInputElement.value = post.text;
+        postInputElement.focus();
+        postSubmitButton.innerText = "Upravit";
+        postForm.querySelector(".disclaimer").classList.add("hidden");
+
+        postResetButton.classList.remove("hidden");
+        postResetButton.setAttribute('aria-hidden', false);
+      }
+    }
+
+    function createPostElement(post) {
       let markup = `<p>${post.text}</p>`;
       if (post.html) markup = post.html;
-      return `
-        <article data-post-id="${post.id}">
-          ${cleanHTML(markup)}
-        </article>
-      `;
+
+      const element = document.createElement('article');
+      element.dataset.id = post.id;
+      element.innerHTML = cleanHTML(markup);
+
+      element.addEventListener("long-press", handlePostUpdate(post));
+
+      return element;
     }
   </script>
 </body>
