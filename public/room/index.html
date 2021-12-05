@@ -168,9 +168,11 @@
       }
 
       if (profile.initialized) {
+        const profilePicture = document.querySelector("header img");
         document.querySelector("header h1").innerText = profile.name || '';
         document.querySelector("#bio")[profile.html ? 'innerHTML' : 'innerText'] = profile.html || profile.bio || '';
-        document.querySelector("header img").src = await getRoomProfilePictureUrl(roomId);
+        profilePicture.src = await getRoomProfilePictureUrl(roomId);
+        profilePicture.addEventListener("long-press", event => event.preventDefault());
         document.querySelector("header").classList.remove("hidden")
         document.querySelector("header").setAttribute('aria-hidden', false);
 
