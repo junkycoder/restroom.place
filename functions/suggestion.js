@@ -25,8 +25,8 @@ exports.suggestion = functions.https.onCall(
 
     const json = {
       prompt: text,
-      temperature: 0.94,
-      max_tokens: 42,
+      temperature: 0.96,
+      max_tokens: 32,
       frequency_penalty: 0.1,
       presence_penalty: 0.6,
       stop: ["\n", ". "],
