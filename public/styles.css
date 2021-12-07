@@ -30,6 +30,10 @@ body.mobile-viewport {
   }
 }
 
+a {
+  color: blue;
+}
+
 header > p {
   text-align: center;
 }
@@ -89,6 +93,9 @@ hr {
 
 .mt8 {
   margin-top: 8px !important;
+}
+.mb8 {
+  margin-bottom: 8px !important;
 }
 .m16 {
   margin: 16px;

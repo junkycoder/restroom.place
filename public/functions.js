@@ -35,3 +35,7 @@ export async function updatePost({
     "updatePost"
   )({ roomId, text, postId, forceDelete });
 }
+
+export async function getSuggestion(text) {
+  return httpsCallable(functions, "suggestion")({ text });
+}

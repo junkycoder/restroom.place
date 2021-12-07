@@ -57,8 +57,10 @@
 
     aside {
       width: 100%;
+      min-height: 72px;
       margin-top: 16px;
       padding-top: 16px;
+      border-top: 1px solid #eee;
     }
 
     aside form {
@@ -68,16 +70,33 @@
     }
 
     aside form>textarea {
-      flex: 1;
+      min-height: 72px;
     }
 
     aside form>textarea.edit {
       border-color: blue;
     }
 
-    aside form textarea {
+    aside .ai {
+      display: block;
       width: 100%;
-      height: 100%;
+      text-align: center;
+      font-size: 24px;
+      text-decoration: none;
+      opacity: 1;
+      transition: opacity 400ms ease-out;
+    }
+
+    aside .ai.disabled {
+      opacity: 0.02;
+    }
+
+    aside .ai.processing {
+      animation: spin 1200ms linear infinite;
+    }
+
+    aside .ai.nah {
+      animation: bounce 200ms ease-in-out;
     }
 
     aside form>div {
@@ -95,8 +114,32 @@
       width: 100%;
       text-align: center;
       font-size: 14px;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
       color: blue;
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes bounce {
+      25% {
+        transform: translateX(-4px);
+      }
+
+      50% {
+        transform: translateX(0);
+      }
+
+      75% {
+        transform: translateX(+4px);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
     }
   </style>
 </head>
@@ -112,12 +155,16 @@
   <aside>
     <form method="POST" id="post" class="hidden" aria-hidden="true">
       <textarea placeholder="Vaše zpráva?" required name="text"></textarea>
-      <div>
+      <div class="center-flex">
+        <a href="#" class="ai disabled">🤖</a>
         <button class="hidden" aria-hidden="true" type="reset">zrušit</button>
-        <button type="submit">Odeslat</button>
         <p class="disclaimer">anonymně</p>
+        <button type="submit">Odeslat</button>
       </div>
     </form>
+    <p class="suggestion hidden" aria-hidden="true" style="font-size: 14px;color: #c4c4c4;margin: 8px 0 0 0;">
+      <span>. Nechtělo se mi vstávat, ale překecal jsem ho.</span> 👈 <a href="#">použít</a>
+    </p>
   </aside>
   <main>
   </main>
@@ -126,7 +173,7 @@
     import { getDocData, getCollectionData } from "/firestore.js"
     import { isCurrentUserVerified } from "/authentication.js";
     import { getRoomProfilePictureUrl } from "/storage.js";
-    import { createPost, updatePost } from "/functions.js";
+    import { createPost, updatePost, getSuggestion } from "/functions.js";
 
     const roomId = parseRoomIdFromUrl();
     if (!roomId) window.location.href = "/";
@@ -134,10 +181,12 @@
     const mainElement = document.querySelector('body main');
     const postForm = document.querySelector("#post");
     const postSubmitButton = postForm.querySelector('button[type="submit"]');
+    const suggestionElement = document.body.querySelector(".suggestion")
 
     const postResetButton = postForm.querySelector("button[type='reset']")
     const postInputElement = postForm.querySelector("textarea");
 
+    const inputAiBotElement = postForm.querySelector('a.ai');
 
     document.querySelector('body header').addEventListener("long-press", () => {
       window.location.href = `/room/${roomId}/manage`;
@@ -148,6 +197,10 @@
 
     postForm.addEventListener("submit", handleFormSubmit);
     postResetButton.addEventListener("click", handleFormReset);
+
+    inputAiBotElement.addEventListener("click", handleAiClick);
+    postInputElement.addEventListener("input", handleInputChange);
+
 
     async function handlePublicProfile() {
       const profile = await getDocData(`rooms/${roomId}/public/profile`).catch(error => {
@@ -261,6 +314,7 @@
       postResetButton.classList.add("hidden");
       postResetButton.setAttribute('aria-hidden', true);
       postForm.querySelector(".disclaimer").classList.remove("hidden");
+      postForm.querySelector(".ai").classList.remove("hidden");
     }
 
     function handlePostUpdate(post) {
@@ -273,9 +327,86 @@
         postInputElement.focus();
         postSubmitButton.innerText = "Upravit";
         postForm.querySelector(".disclaimer").classList.add("hidden");
+        postForm.querySelector(".ai").classList.add("hidden");
 
         postResetButton.classList.remove("hidden");
         postResetButton.setAttribute('aria-hidden', false);
+
+      }
+    }
+
+    async function handleAiClick(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const isItFirstTime = localStorage.getItem('ai-first-time') === null;
+      if (isItFirstTime && !confirm("Vaše věty začne doplňovat umělá inteligence, OK?")) {
+        return;
+      } else {
+        localStorage.setItem('ai-first-time', false);
+      }
+
+      if (event.target.classList.contains("processing")) {
+        event.target.classList.remove("processing");
+        event.target.classList.add("nah");
+        handleSuggestionClose(event);
+      } else {
+        event.target.classList.add("processing");
+        event.target.classList.remove("nah");
+
+        const { data: suggestion } = await getSuggestion(postInputElement.value).catch((o_O) => {
+          event.target.classList.add("nah");
+          event.target.classList.remove("processing");
+          handleSuggestionClose(event);
+          if (!isCurrentUserVerified()) {
+            alert("Pouze verifikovaný uživatel smí používat umělou inteligenci.");
+            const destination = encodeURIComponent((new URL(event.target.href)).pathname);
+            window.location.href = `/user/verify-self/?destination=${destination}`;
+          }
+        }) || {};
+
+        if (suggestion) {
+          suggestionElement.querySelector('span').innerText = suggestion;
+          suggestionElement.classList.remove("hidden");
+          suggestionElement.setAttribute('aria-hidden', false);
+          suggestionElement.addEventListener('click', handleSuggestionUse);
+        }
+      }
+
+    }
+
+    function handleSuggestionUse(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      const textElement = suggestionElement.querySelector('span');
+      postInputElement.value += ' ' + textElement.innerText;
+      textElement.innerText = "";
+      suggestionElement.classList.add("hidden");
+      suggestionElement.setAttribute('aria-hidden', true);
+      postInputElement.focus();
+      inputAiBotElement.classList.remove("processing");
+    }
+
+    function handleSuggestionClose(event) {
+      event?.preventDefault();
+
+      suggestionElement.querySelector('span').innerText = "";
+      suggestionElement.classList.add("hidden");
+      suggestionElement.setAttribute('aria-hidden', true);
+      suggestionElement.removeEventListener('click', handleSuggestionUse);
+      inputAiBotElement.classList.remove("processing");
+      inputAiBotElement.classList.remove("nah");
+    }
+
+
+    const MIN_INPUT_WORDS_COUNT = 5;
+
+    function handleInputChange(event) {
+      if (event.target.value.split(' ').length >= MIN_INPUT_WORDS_COUNT) {
+        postForm.querySelector('a.ai').classList.remove("disabled");
+      } else {
+        postForm.querySelector('a.ai').classList.add("disabled");
+        handleSuggestionClose();
       }
     }
 

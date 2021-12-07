@@ -8,4 +8,5 @@ module.exports = {
   ...require("./updateRoom"),
   ...require("./createPost"),
   ...require("./updatePost"),
+  ...require("./suggestion"),
 };

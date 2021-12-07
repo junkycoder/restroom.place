@@ -2,6 +2,7 @@
   "name": "scripts",
   "version": "1.0.0",
   "dependencies": {
+    "fetch-h2": "^3.0.1",
     "firebase-admin": "^10.0.0"
   }
 }
