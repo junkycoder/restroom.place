@@ -295,6 +295,7 @@
         }
 
         postForm.reset();
+        handleSuggestionClose();
         document.querySelector('main article.placeholder')?.remove();
       } catch (error) {
         console.error(error);
@@ -379,13 +380,13 @@
       event.preventDefault();
       event.stopPropagation();
       const textElement = suggestionElement.querySelector('span');
-      postInputElement.value += ' ' + textElement.innerText;
+      postInputElement.value += textElement.innerText;
       textElement.innerText = "";
       suggestionElement.classList.add("hidden");
       suggestionElement.setAttribute('aria-hidden', true);
-      postInputElement.focus();
       inputAiBotElement.classList.remove("processing");
       handleSuggestionClose();
+      postInputElement.focus();
     }
 
     function handleSuggestionClose(event) {
