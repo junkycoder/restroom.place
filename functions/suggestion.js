@@ -4,12 +4,29 @@ const { fetch, Headers } = require("fetch-h2");
 
 const config = functions.config();
 
+const MIN_INPUT_USER_LENGTH = 120;
+const MAX_INPUT_USER_LENGTH = 100 * 4;
+
 exports.suggestion = functions.https.onCall(
   async ({ roomId, text }, context) => {
     if (!context.auth || !context.auth.token.email_verified) {
       throw new functions.https.HttpsError(
         "unauthenticated",
         "Nejste ověřeno."
+      );
+    }
+
+    if (text.length < MIN_INPUT_USER_LENGTH) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        `Nejprve zadejte alespoň ${MIN_INPUT_USER_LENGTH} znaků.`
+      );
+    }
+
+    if (text.length > MAX_INPUT_USER_LENGTH) {
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        `Zadejte maximálně ${MAX_INPUT_USER_LENGTH} znaků.`
       );
     }
 
@@ -26,7 +43,7 @@ exports.suggestion = functions.https.onCall(
     const json = {
       prompt: text,
       temperature: 0.8,
-      max_tokens: 24,
+      max_tokens: 30,
       // frequency_penalty: 0.1,
       // presence_penalty: 0.6,
       stop: ["\n", ". "],

@@ -305,6 +305,7 @@
         alert(error.message);
       } finally {
         postSubmitButton.removeAttribute('disabled');
+        postInputElement.dataset.alreadySuggested = null;
       }
     }
 
@@ -385,10 +386,9 @@
       const textElement = suggestionElement.querySelector('span');
       postInputElement.value += textElement.innerText;
       textElement.innerText = "";
-      suggestionElement.classList.add("hidden");
-      suggestionElement.setAttribute('aria-hidden', true);
-      inputAiBotElement.classList.remove("processing");
       handleSuggestionClose();
+      postInputElement.dataset.alreadySuggested = true;
+      postForm.querySelector('a.ai').classList.add("disabled");
       postInputElement.focus();
     }
 
@@ -404,10 +404,18 @@
     }
 
 
-    const MIN_INPUT_WORDS_COUNT = 5;
+    const MIN_INPUT_WORDS_COUNT = 10;
+    const MIN_INPUT_LENGTH = 120;
+    const MAX_INPUT_LENGTH = 100 * 4;
 
     function handleInputChange(event) {
-      if (event.target.value.split(' ').length >= MIN_INPUT_WORDS_COUNT) {
+      const { value, dataset } = event.target;
+
+      if (!value) { dataset.alreadySuggested = null; }
+      else if (dataset.alreadySuggested) { return; }
+      else if (value.length >= MIN_INPUT_LENGTH &&
+        value.split(' ').length >= MIN_INPUT_WORDS_COUNT &&
+        value.length <= MAX_INPUT_LENGTH) {
         postForm.querySelector('a.ai').classList.remove("disabled");
       } else {
         postForm.querySelector('a.ai').classList.add("disabled");
