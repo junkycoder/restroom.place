@@ -33,6 +33,10 @@
       font-size: 12px;
       display: block;
     }
+
+    textarea[name="bio"] {
+      min-height: 20vh;
+    }
   </style>
 </head>
 
@@ -91,7 +95,6 @@
         document.querySelector('input[name="sticked"]').checked = true;
         const bioElement = document.querySelector('textarea[name="bio"]');
         bioElement.innterText = profile.bio;
-        bioElement.style.minHeight = profile.bio.split('\n').length * 24 + 'px';
       }
 
       const pictureUrl = await getRoomProfilePictureUrl(roomId);
