@@ -31,7 +31,8 @@ exports.suggestion = functions.https.onCall(
     }
 
     const apiToken = (config.openai && config.openai.key) || "";
-    const engine = "davinci";
+    // const engine = "davinci";
+    const engine = "content-filter-alpha";
     const url = `https://api.openai.com/v1/engines/${engine}/completions`;
 
     const headers = new Headers({
@@ -41,12 +42,13 @@ exports.suggestion = functions.https.onCall(
     });
 
     const json = {
-      prompt: text,
-      temperature: 0.8,
-      max_tokens: 30,
-      // frequency_penalty: 0.1,
-      // presence_penalty: 0.6,
-      stop: ["\n", ". "],
+      prompt: `<|endoftext|>${text}\n--\nLabel:`,
+      temperature: 0.0,
+      max_tokens: 1,
+      top_p: 1,
+      frequency_penalty: 0.0,
+      presence_penalty: 0.0,
+      logprobs: 10,
     };
 
     const response = await fetch(url, {
@@ -55,7 +57,18 @@ exports.suggestion = functions.https.onCall(
       json,
     });
 
-    const { choices: [{ text: suggestion = "" } = {}] = [] } = await response.json();
+    let fok;
+
+    const {
+      choices: [
+        {
+          text: suggestion = "",
+          logprobs: { top_logprobs: [logprobs] = [] } = {},
+        } = {},
+      ] = [],
+    } = fok =await response.json();
+
+    console.log(JSON.stringify(fok, null, 2));
 
     if (suggestion.length === 0) {
       throw new functions.https.HttpsError("unknown", "Nepodařilo se.");

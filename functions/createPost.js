@@ -5,11 +5,8 @@ const admin = require("firebase-admin");
 /**
  * Create post
  */
-exports.createPost = functions
-  .runWith({
-    minInstances: 1,
-  })
-  .https.onCall(async ({ roomId, text }, context) => {
+exports.createPost = functions.https.onCall(
+  async ({ roomId, text }, context) => {
     if (!context.auth) {
       throw new functions.https.HttpsError(
         "unauthenticated",
@@ -55,4 +52,5 @@ exports.createPost = functions
 
       return { id: ref.id, ...post };
     });
-  });
+  }
+);
